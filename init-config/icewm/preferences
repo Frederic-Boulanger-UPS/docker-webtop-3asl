@@ -1,0 +1,4 @@
+ConfirmLogout=1
+TimeFormat="%T"
+TerminalCommand="uxterm"
+LogoutCommand="sudo kill 1"

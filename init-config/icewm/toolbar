@@ -1,0 +1,6 @@
+prog "Terminal" mini.xterm /usr/bin/uxterm
+prog "FeatherPad" featherpad featherpad
+prog "Firefox" firefox /usr/bin/firefox
+prog "File browser (Rox)" /usr/share/rox/images/application.png /usr/bin/rox-filer
+prog "Eclipse Modeling" /usr/local/eclipse/icon.xpm /usr/local/eclipse/eclipse
+prog "Isabelle" /usr/local/Isabelle/lib/icons/isabelle.xpm /usr/local/Isabelle/bin/isabelle jedit

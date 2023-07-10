@@ -1,0 +1,22 @@
+menu "Network" folder {
+menu "WebBrowser" folder {
+prog "Firefox Web Browser" firefox firefox
+}
+}
+menu "System" folder {
+menu "Core" folder {
+prog "ROX Filer" system-file-manager /usr/bin/rox-filer
+}
+menu "TerminalEmulator" folder {
+prog "UXTerm" mini.xterm uxterm
+prog "XTerm" mini.xterm xterm
+}
+}
+menu "Utility" folder {
+menu "FileTools" folder {
+prog "ROX Filer" system-file-manager /usr/bin/rox-filer
+}
+menu "TextEditor" folder {
+prog "FeatherPad" featherpad featherpad
+}
+}
