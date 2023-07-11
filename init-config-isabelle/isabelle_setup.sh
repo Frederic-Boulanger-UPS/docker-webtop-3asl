@@ -1,3 +1,4 @@
+cat - > /usr/share/applications/Isabelle.desktop << "==END=="
 [Desktop Entry]
 Version=1.0
 Name=Isabelle
@@ -9,3 +10,4 @@ Icon=/usr/local/Isabelle/lib/icons/isabelle.xpm
 Type=Application
 Categories=Proof;Development;Science;Math
 MimeType=text/text;
+==END==

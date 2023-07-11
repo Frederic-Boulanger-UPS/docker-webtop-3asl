@@ -1,0 +1,46 @@
+FROM lscr.io/linuxserver/webtop:ubuntu-icewm
+
+# For which architecture to build (amd64 or arm64)
+ARG arch
+
+ENV HOME="/config"
+ENV TZ=Europe/Paris
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN  \
+	apt-get update ; \
+	apt-get upgrade -y
+
+RUN \
+  apt-get clean ; \
+  rm -rf \
+    /tmp/* \
+    /config/* \
+    /var/lib/apt/lists/* \
+    /var/tmp/*
+
+# Install Isabelle
+RUN \
+	case ${arch} in \
+		arm64) isabelletgz=Isabelle2022_linux_arm.tar.gz ;; \
+		amd64) isabelletgz=Isabelle2022_linux.tar.gz ;; \
+		*) echo "Unsupported architecture ${arch}" ;; \
+	esac ; \
+	curl --remote-name "https://isabelle.in.tum.de/dist/${isabelletgz}" ; \
+	tar zxf ${isabelletgz} && rm ${isabelletgz} ; \
+	mv Isabelle2022 /usr/local/Isabelle
+
+COPY mydocker_startup/wrapper_script.sh /usr/local/lib/wrapper_script.sh
+
+COPY init-config-isabelle/* /init-config/
+
+RUN \
+	cd /init-config ; \
+	for script in *.sh ; \
+	do \
+		chmod +x $script ; \
+		./$script ; \
+		rm $script ; \
+	done
+
+ENTRYPOINT ["/bin/bash", "/usr/local/lib/wrapper_script.sh"]

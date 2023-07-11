@@ -1,3 +1,4 @@
+cat - > /usr/share/applications/Eclipse.desktop << "==END=="
 [Desktop Entry]
 Version=1.0
 Name=Eclipse
@@ -9,3 +10,4 @@ Icon=/usr/local/eclipse/icon.xpm
 Type=Application
 Categories=Development;IDE;
 MimeType=text/text;
+==END==
