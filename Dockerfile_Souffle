@@ -1,0 +1,64 @@
+FROM lscr.io/linuxserver/webtop:ubuntu-icewm
+
+# For which architecture to build (amd64 or arm64)
+ARG arch
+
+ENV HOME="/config"
+ENV TZ=Europe/Paris
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN  \
+	apt-get update ; \
+	apt-get upgrade -y
+
+RUN \
+	apt-get install -y \
+		zip \
+		cmake \
+		python3 \
+		g++ \
+		bison \
+		flex \
+		git \
+		libffi-dev \
+		libncurses-dev \
+		libsqlite3-dev \
+		sqlite \
+		mcpp \
+		swig \
+		zlib1g-dev
+
+RUN \
+	curl -O https://codeload.github.com/souffle-lang/souffle/zip/refs/heads/master ; \
+	unzip master ; \
+	cd souffle-master ; \
+	cmake -S . -B build -DCMAKE_INSTALL_PREFIX=/usr/local ; \
+	cmake --build build --target install
+	
+# /usr/local/include/souffle
+# /usr/local/bin/souffle
+# /usr/local/bin/souffleprof
+# /usr/local/bin/souffle-compile.py
+	
+RUN \
+  apt-get clean ; \
+  rm -rf \
+    /tmp/* \
+    /config/* \
+    /var/lib/apt/lists/* \
+    /var/tmp/*
+
+COPY mydocker_startup/wrapper_script.sh /usr/local/lib/wrapper_script.sh
+
+COPY init-config-souffle/* /init-config/
+
+RUN \
+	cd /init-config ; \
+	for script in *.sh ; \
+	do \
+		chmod +x $script ; \
+		./$script ; \
+		rm $script ; \
+	done
+
+ENTRYPOINT ["/bin/bash", "/usr/local/lib/wrapper_script.sh"]

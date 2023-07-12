@@ -12,9 +12,11 @@ PLATFORMS := $$(first="True"; for a in $(ARCHS); do if [[ $$first == "True" ]]; 
 DOCKERFILE = Dockerfile
 DOCKERFILEECLIPSE = Dockerfile_Eclipse
 DOCKERFILEISABELLE = Dockerfile_Isabelle
+DOCKERFILESOUFFLE = Dockerfile_Souffle
 ARCHIMAGE := $(REPO)$(NAME):$(TAG)-$(ARCH)
 ARCHIMAGEECLIPSE := $(REPO)docker-webtop-eclipse:$(TAG)-$(ARCH)
 ARCHIMAGEISABELLE := $(REPO)docker-webtop-isabelle:$(TAG)-$(ARCH)
+ARCHIMAGESOUFFLE := $(REPO)docker-webtop-souffle:$(TAG)-$(ARCH)
 
 help:
 	@echo "# Available targets:"
@@ -40,6 +42,7 @@ build:
 							 --build-arg arch=$(ARCH) \
 							 --build-arg ECLIPSEIMAGE=$(ARCHIMAGEECLIPSE) \
 							 --build-arg ISABELLEIMAGE=$(ARCHIMAGEISABELLE) \
+							 --build-arg SOUFFLEIMAGE=$(ARCHIMAGESOUFFLE) \
 							 --tag $(ARCHIMAGE) --file $(DOCKERFILE) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
 	if [[ $$danglingimages != "" ]]; then \
@@ -65,6 +68,18 @@ build_isabelle:
 											--build-arg arch=$(ARCH) \
 											--tag $(ARCHIMAGEISABELLE) \
 											--file $(DOCKERFILEISABELLE) .
+	@danglingimages=$$(docker images --filter "dangling=true" -q); \
+	if [[ $$danglingimages != "" ]]; then \
+	  docker rmi $$(docker images --filter "dangling=true" -q); \
+	fi
+
+# Build Souffle image
+build_souffle:
+	@echo "Building $(ARCHIMAGESOUFFLE) for $(ARCH) from $(DOCKERFILESOUFFLE)"
+	docker build --pull --platform linux/$(ARCH) \
+											--build-arg arch=$(ARCH) \
+											--tag $(ARCHIMAGESOUFFLE) \
+											--file $(DOCKERFILESOUFFLE) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
 	if [[ $$danglingimages != "" ]]; then \
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
@@ -139,6 +154,18 @@ run_isabelle:
 		--publish 3001:3001 \
 		--name $(NAME) \
 		$(ARCHIMAGEISABELLE)
+	sleep 5
+	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
+
+run_souffle:
+	docker run --rm --detach \
+	  --platform linux/$(ARCH) \
+		--env="PUID=`id -u`" --env="PGID=`id -g`" \
+		--volume ${PWD}/config:/config:rw \
+		--publish 3000:3000 \
+		--publish 3001:3001 \
+		--name $(NAME) \
+		$(ARCHIMAGESOUFFLE)
 	sleep 5
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
