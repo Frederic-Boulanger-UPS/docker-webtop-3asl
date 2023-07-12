@@ -38,6 +38,11 @@ build:
 		echo "* You should 'make build_isabelle' first *" ; \
 		echo "******************************************" ; \
 	fi
+	@if [ `docker images $(ARCHIMAGESOUFFLE) | wc -l` -lt 2 ] ; then \
+		echo "******************************************" ; \
+		echo "* You should 'make build_souffle' first *" ; \
+		echo "******************************************" ; \
+	fi
 	docker build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
 							 --build-arg ECLIPSEIMAGE=$(ARCHIMAGEECLIPSE) \
