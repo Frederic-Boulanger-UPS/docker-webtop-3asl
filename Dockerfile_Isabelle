@@ -7,18 +7,6 @@ ENV HOME="/config"
 ENV TZ=Europe/Paris
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN  \
-	apt-get update ; \
-	apt-get upgrade -y
-
-RUN \
-  apt-get clean ; \
-  rm -rf \
-    /tmp/* \
-    /config/* \
-    /var/lib/apt/lists/* \
-    /var/tmp/*
-
 # Install Isabelle
 RUN \
 	case ${arch} in \
@@ -28,7 +16,44 @@ RUN \
 	esac ; \
 	curl --remote-name "https://isabelle.in.tum.de/dist/${isabelletgz}" ; \
 	tar zxf ${isabelletgz} && rm ${isabelletgz} ; \
-	mv Isabelle2022 /usr/local/Isabelle
+	mv Isabelle2022 /usr/local/Isabelle ; \
+	ln -s /usr/local/Isabelle/bin/isabelle /usr/local/bin/isabelle
+
+RUN  \
+	apt-get update ; \
+	apt-get upgrade -y
+
+RUN \
+	apt-get install -y \
+	make ocaml menhir libnum-ocaml-dev libmenhir-ocaml-dev libzarith-ocaml-dev \
+	libzip-ocaml-dev liblablgtk3-ocaml-dev liblablgtksourceview3-ocaml-dev \
+	libocamlgraph-ocaml-dev libre-ocaml-dev libjs-of-ocaml-dev alt-ergo z3 cvc4 \
+	yaru-theme-icon \
+	adwaita-icon-theme-full \
+	coqide
+
+RUN \
+	curl -O https://why3.gitlabpages.inria.fr/releases/why3-1.6.0.tar.gz ; \
+	tar zxf why3-1.6.0.tar.gz && rm why3-1.6.0.tar.gz ; \
+	cd why3-1.6.0 ; \
+	./configure ; \
+	make ; \
+	echo "/usr/local/lib/why3/isabelle" >> /usr/local/Isabelle/etc/components ; \
+	make install ; \
+	make byte ; \
+	make install-lib ; \
+	heapsdir=`ls -d /usr/local/Isabelle*/heaps/polyml-*`; \
+	homeheaps=`ls -d ${HOME}/.isabelle/Isabelle*/heaps/polyml-*`; \
+	mv ${homeheaps}/Why3 ${heapsdir}/ ; \
+  mv ${homeheaps}/log/* ${heapsdir}/log/
+
+RUN \
+  apt-get clean ; \
+  rm -rf \
+    /tmp/* \
+    /config/* \
+    /var/lib/apt/lists/* \
+    /var/tmp/*
 
 COPY mydocker_startup/wrapper_script.sh /usr/local/lib/wrapper_script.sh
 

@@ -1,0 +1,54 @@
+# For which architecture to build (amd64 or arm64)
+ARG arch
+# Isabelle image
+ARG ISABELLEIMAGE
+
+FROM ${ISABELLEIMAGE}
+
+ENV HOME="/config"
+ENV TZ=Europe/Paris
+ARG DEBIAN_FRONTEND=noninteractive
+# Fix spurious accessibility bus error messages
+ENV NO_AT_BRIDGE=1
+
+RUN \
+	apt-get update ; \
+	apt-get upgrade -y ; \
+	apt-get install -y \
+		opam \
+		autoconf \
+		graphviz \
+		yaru-theme-icon \
+		adwaita-icon-theme-full \
+		at-spi2-core
+
+RUN \
+	mkdir /opt/opam ; \
+	opam init --root=/opt/opam --yes ; \
+	eval $(opam env --root=/opt/opam) ; \
+	export OPAMROOT=/opt/opam ; \
+	opam install -y frama-c frama-c-metacsl
+ 
+RUN \
+  apt-get autoremove ; \
+  apt-get autoclean ; \
+  rm -rf \
+    /tmp/* \
+    /config/* \
+    /var/lib/apt/lists/* \
+    /var/tmp/*
+
+COPY mydocker_startup/wrapper_script.sh /usr/local/lib/wrapper_script.sh
+
+COPY init-config-frama-c/* /init-config/
+
+RUN \
+	cd /init-config ; \
+	for script in *.sh ; \
+	do \
+		chmod +x $script ; \
+		./$script ; \
+		rm $script ; \
+	done
+
+ENTRYPOINT ["/bin/bash", "/usr/local/lib/wrapper_script.sh"]

@@ -13,10 +13,12 @@ DOCKERFILE = Dockerfile
 DOCKERFILEECLIPSE = Dockerfile_Eclipse
 DOCKERFILEISABELLE = Dockerfile_Isabelle
 DOCKERFILESOUFFLE = Dockerfile_Souffle
+DOCKERFILEFRAMAC = Dockerfile_Frama-C
 ARCHIMAGE := $(REPO)$(NAME):$(TAG)-$(ARCH)
 ARCHIMAGEECLIPSE := $(REPO)docker-webtop-eclipse:$(TAG)-$(ARCH)
 ARCHIMAGEISABELLE := $(REPO)docker-webtop-isabelle:$(TAG)-$(ARCH)
 ARCHIMAGESOUFFLE := $(REPO)docker-webtop-souffle:$(TAG)-$(ARCH)
+ARCHIMAGEFRAMAC := $(REPO)docker-webtop-framac:$(TAG)-$(ARCH)
 
 help:
 	@echo "# Available targets:"
@@ -43,11 +45,17 @@ build:
 		echo "* You should 'make build_souffle' first *" ; \
 		echo "******************************************" ; \
 	fi
+	@if [ `docker images $(ARCHIMAGEFRAMAC) | wc -l` -lt 2 ] ; then \
+		echo "******************************************" ; \
+		echo "* You should 'make build_framac' first *" ; \
+		echo "******************************************" ; \
+	fi
 	docker build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
 							 --build-arg ECLIPSEIMAGE=$(ARCHIMAGEECLIPSE) \
 							 --build-arg ISABELLEIMAGE=$(ARCHIMAGEISABELLE) \
 							 --build-arg SOUFFLEIMAGE=$(ARCHIMAGESOUFFLE) \
+							 --build-arg FRAMACIMAGE=$(ARCHIMAGEFRAMAC) \
 							 --tag $(ARCHIMAGE) --file $(DOCKERFILE) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
 	if [[ $$danglingimages != "" ]]; then \
@@ -57,10 +65,10 @@ build:
 # Build Eclipse image
 build_eclipse:
 	@echo "Building $(ARCHIMAGEECLIPSE) for $(ARCH) from $(DOCKERFILEECLIPSE)"
-	docker build --pull --platform linux/$(ARCH) \
-											--build-arg arch=$(ARCH) \
-											--tag $(ARCHIMAGEECLIPSE) \
-											--file $(DOCKERFILEECLIPSE) .
+	docker build --platform linux/$(ARCH) \
+							 --build-arg arch=$(ARCH) \
+							 --tag $(ARCHIMAGEECLIPSE) \
+							 --file $(DOCKERFILEECLIPSE) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
 	if [[ $$danglingimages != "" ]]; then \
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
@@ -69,10 +77,10 @@ build_eclipse:
 # Build Isabelle image
 build_isabelle:
 	@echo "Building $(ARCHIMAGEISABELLE) for $(ARCH) from $(DOCKERFILEISABELLE)"
-	docker build --pull --platform linux/$(ARCH) \
-											--build-arg arch=$(ARCH) \
-											--tag $(ARCHIMAGEISABELLE) \
-											--file $(DOCKERFILEISABELLE) .
+	docker build --platform linux/$(ARCH) \
+							 --build-arg arch=$(ARCH) \
+							 --tag $(ARCHIMAGEISABELLE) \
+							 --file $(DOCKERFILEISABELLE) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
 	if [[ $$danglingimages != "" ]]; then \
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
@@ -81,10 +89,23 @@ build_isabelle:
 # Build Souffle image
 build_souffle:
 	@echo "Building $(ARCHIMAGESOUFFLE) for $(ARCH) from $(DOCKERFILESOUFFLE)"
-	docker build --pull --platform linux/$(ARCH) \
-											--build-arg arch=$(ARCH) \
-											--tag $(ARCHIMAGESOUFFLE) \
-											--file $(DOCKERFILESOUFFLE) .
+	docker build --platform linux/$(ARCH) \
+							 --build-arg arch=$(ARCH) \
+							 --tag $(ARCHIMAGESOUFFLE) \
+							 --file $(DOCKERFILESOUFFLE) .
+	@danglingimages=$$(docker images --filter "dangling=true" -q); \
+	if [[ $$danglingimages != "" ]]; then \
+	  docker rmi $$(docker images --filter "dangling=true" -q); \
+	fi
+
+# Build Frama-C image
+build_framac:
+	@echo "Building $(ARCHIMAGEFRAMAC) for $(ARCH) from $(DOCKERFILEFRAMAC)"
+	docker build --platform linux/$(ARCH) \
+							 --build-arg arch=$(ARCH) \
+							 --build-arg ISABELLEIMAGE=$(ARCHIMAGEISABELLE) \
+							 --tag $(ARCHIMAGEFRAMAC) \
+							 --file $(DOCKERFILEFRAMAC) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
 	if [[ $$danglingimages != "" ]]; then \
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
@@ -171,6 +192,18 @@ run_souffle:
 		--publish 3001:3001 \
 		--name $(NAME) \
 		$(ARCHIMAGESOUFFLE)
+	sleep 5
+	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
+
+run_framac:
+	docker run --rm --detach \
+	  --platform linux/$(ARCH) \
+		--env="PUID=`id -u`" --env="PGID=`id -g`" \
+		--volume ${PWD}/config:/config:rw \
+		--publish 3000:3000 \
+		--publish 3001:3001 \
+		--name $(NAME) \
+		$(ARCHIMAGEFRAMAC)
 	sleep 5
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 

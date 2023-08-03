@@ -27,6 +27,7 @@ cat - > /init-config/.icewm/programs << "==END=="
 prog "Firefox Web Browser" firefox firefox
 prog "ROX Filer" system-file-manager /usr/bin/rox-filer
 prog "Isabelle" /usr/local/Isabelle/lib/icons/isabelle.xpm /usr/local/Isabelle/bin/isabelle jedit
+prog "Coq IDE" coq.xpm coqide
 prog "FeatherPad" featherpad featherpad
 prog "UXTerm" mini.xterm uxterm
 ==END==
@@ -37,6 +38,7 @@ prog "FeatherPad" featherpad featherpad
 prog "Firefox" firefox /usr/bin/firefox
 prog "File browser (Rox)" /usr/share/rox/images/application.png /usr/bin/rox-filer
 prog "Isabelle" /usr/local/Isabelle/lib/icons/isabelle.xpm /usr/local/Isabelle/bin/isabelle jedit
+prog "Coq IDE" coq.xpm coqide
 ==END==
 
 cat - > /init-config/.icewm/startup << "==END=="

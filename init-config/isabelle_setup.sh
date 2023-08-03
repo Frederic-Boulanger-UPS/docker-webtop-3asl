@@ -11,3 +11,37 @@ Type=Application
 Categories=Proof;Development;Science;Math
 MimeType=text/text;
 ==END==
+
+cat - > /init-config/.why3.conf << "==END=="
+[main]
+default_editor = "xdg-open %f"
+magic = 14
+memlimit = 1000
+running_provers_max = 2
+timelimit = 5.000000
+
+[partial_prover]
+name = "Alt-Ergo"
+path = "/usr/bin/alt-ergo"
+version = "2.0.0"
+
+[partial_prover]
+name = "CVC4"
+path = "/usr/bin/cvc4"
+version = "1.8"
+
+[partial_prover]
+name = "Coq"
+path = "/usr/bin/coqtop"
+version = "8.15.0"
+
+[partial_prover]
+name = "Isabelle"
+path = "/usr/local/bin/isabelle"
+version = "2022"
+
+[partial_prover]
+name = "Z3"
+path = "/usr/bin/z3"
+version = "4.8.12"
+==END==
