@@ -64,6 +64,8 @@ RUN \
 		graphviz
 
 RUN \
+	apt-get autoremove ; \
+	apt-get autoclean ; \
   apt-get clean ; \
   rm -rf \
     /tmp/* \
