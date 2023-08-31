@@ -156,7 +156,7 @@ run:
 		--publish 3001:3001 \
 		--name $(NAME) \
 		$(ARCHIMAGE)
-	sleep 5
+	sleep 10
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 run_eclipse:
@@ -168,7 +168,7 @@ run_eclipse:
 		--publish 3001:3001 \
 		--name $(NAME) \
 		$(ARCHIMAGEECLIPSE)
-	sleep 5
+	sleep 10
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 run_isabelle:
@@ -180,7 +180,7 @@ run_isabelle:
 		--publish 3001:3001 \
 		--name $(NAME) \
 		$(ARCHIMAGEISABELLE)
-	sleep 5
+	sleep 10
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 run_souffle:
@@ -192,7 +192,7 @@ run_souffle:
 		--publish 3001:3001 \
 		--name $(NAME) \
 		$(ARCHIMAGESOUFFLE)
-	sleep 5
+	sleep 10
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 run_framac:
@@ -204,7 +204,7 @@ run_framac:
 		--publish 3001:3001 \
 		--name $(NAME) \
 		$(ARCHIMAGEFRAMAC)
-	sleep 5
+	sleep 10
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 runpriv:
@@ -216,7 +216,7 @@ runpriv:
 		--publish 3001:3001 \
 		--name $(NAME) \
 		$(ARCHIMAGE)
-	sleep 5
+	sleep 10
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 debug:
