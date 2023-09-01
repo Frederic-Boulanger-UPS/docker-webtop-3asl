@@ -1,6 +1,7 @@
 .PHONY: build manifest run debug push save clean clobber buildaltergo buildprovers
 
-REPO    = gitlab-research.centralesupelec.fr:4567/boulange/mydocker-images/
+# REPO    = gitlab-research.centralesupelec.fr:4567/boulange/mydocker-images/
+REPO    = fredblgr/
 NAME    = docker-webtop-3asl
 TAG     = 2023
 # Can be overriden with "make ARCH=amd64" for instance
@@ -111,8 +112,11 @@ build_framac:
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
 	fi
 
-login:
-	docker login gitlab-research.centralesupelec.fr:4567
+# login:
+# 	docker login gitlab-research.centralesupelec.fr:4567
+
+login2docker.io:
+	docker login --username fredblgr https://index.docker.io
 
 # Safe way to build multiarchitecture images:
 # - build each image on the matching hardware, with the -$(ARCH) tag
@@ -134,6 +138,12 @@ rmmanifest:
 
 push:
 	docker push $(ARCHIMAGE)
+
+push2docker.io:
+	docker push $(REPODOCKER)$(NAME):$(TAG)-$(ARCH)
+
+tag2docker.io:
+	docker tag $(ARCHIMAGE) $(REPODOCKER)$(NAME):$(TAG)-$(ARCH)
 
 save:
 	docker save $(ARCHIMAGE) | gzip > $(NAME)-$(TAG)-$(ARCH).tar.gz
