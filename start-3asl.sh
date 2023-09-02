@@ -1,7 +1,9 @@
 #!/bin/sh
-# Ubuntu 22.04LTS headless noVNC
-# Connect to http://localhost:6080/
-REPO=gitlab-research.centralesupelec.fr:4567/boulange/mydocker-images/
+# Ubuntu icewm webtop
+# Connect to http://localhost:3000/
+
+# REPO=gitlab-research.centralesupelec.fr:4567/boulange/mydocker-images/
+REPO=fredblgr/
 IMAGE=docker-webtop-3asl
 TAG=2023
 URL=localhost
