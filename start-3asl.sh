@@ -5,7 +5,7 @@
 # REPO=gitlab-research.centralesupelec.fr:4567/boulange/mydocker-images/
 REPO=fredblgr/
 IMAGE=docker-webtop-3asl
-TAG=2023
+TAG=2023a
 URL=localhost
 PORT=3000
 SPORT=3001
