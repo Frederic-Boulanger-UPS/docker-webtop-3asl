@@ -51,6 +51,12 @@ RUN \
 			-installIU "${feature}" ; \
 	done
 
+# Install MiniARM assembler plugin
+RUN /usr/local/eclipse/eclipse -nosplash \
+			-application org.eclipse.equinox.p2.director \
+			-repository https://wdi.centralesupelec.fr/boulanger/misc/mini-arm-update-site \
+			-installIU "fr.centralesupelec.infonum.sl.miniarm.feature.feature.group"
+
 COPY mydocker_startup/wrapper_script.sh /usr/local/lib/wrapper_script.sh
 
 COPY init-config-eclipse/* /init-config/

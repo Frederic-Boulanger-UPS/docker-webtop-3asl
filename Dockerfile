@@ -63,6 +63,11 @@ RUN \
 	apt-get install -y \
 		graphviz
 
+# Install Logisim
+RUN \
+	apt-get install -y logisim \
+	&& rm /usr/bin/logisim
+
 RUN \
 	apt-get autoremove ; \
 	apt-get autoclean ; \
@@ -75,6 +80,7 @@ RUN \
 
 # Copy Eclipse installation from Eclipse image
 COPY --from=eclipseimage /usr/local/eclipse /usr/local/eclipse
+RUN ln -s /usr/local/eclipse/eclipse /usr/local/bin/eclipse
 
 # Copy Isabelle installation from Isabelle image
 COPY --from=isabelleimage /usr/local/Isabelle /usr/local/Isabelle

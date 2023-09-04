@@ -28,6 +28,7 @@ prog "Firefox Web Browser" firefox firefox
 prog "ROX Filer" system-file-manager /usr/bin/rox-filer
 prog "Eclipse Modeling" /usr/local/eclipse/icon.xpm /usr/local/eclipse/eclipse
 prog "Isabelle" /usr/local/Isabelle/lib/icons/isabelle.xpm /usr/local/Isabelle/bin/isabelle jedit
+prog "Logisim" /usr/share/logisim/icon.xpm /usr/local/bin/logisim
 prog "Coq IDE" coq.xpm coqide
 prog "FeatherPad" featherpad featherpad
 prog "UXTerm" mini.xterm uxterm
@@ -40,6 +41,7 @@ prog "Firefox" firefox /usr/bin/firefox
 prog "File browser (Rox)" /usr/share/rox/images/application.png /usr/bin/rox-filer
 prog "Eclipse Modeling" /usr/local/eclipse/icon.xpm /usr/local/eclipse/eclipse
 prog "Isabelle" /usr/local/Isabelle/lib/icons/isabelle.xpm /usr/local/Isabelle/bin/isabelle jedit
+prog "Logisim" /usr/share/logisim/icon.xpm /usr/local/bin/logisim
 prog "Coq IDE" coq.xpm coqide
 ==END==
 
