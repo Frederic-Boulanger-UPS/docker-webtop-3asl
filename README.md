@@ -9,6 +9,8 @@ which is maintained and quite often updated.
 
 This image uses Ubuntu 22.04 and the [IceWM](https://ice-wm.org) window manager.
 
+It is available on [Docker hub](https://hub.docker.com/repository/docker/fredblgr/docker-webtop-3asl/general)
+
 ## Details
 
 - The exposed ports are 3000 (HTTP/VNC) and 3001 (HTTPS/VNC).
@@ -20,7 +22,7 @@ This image uses Ubuntu 22.04 and the [IceWM](https://ice-wm.org) window manager.
   
   `docker run --rm --detach --env="PUID=\`id -u\`" --env="PGID=\`id -g\`" \
   	--publish 3000:3000 --publish 3001:3001 --volume "$(pwd)/config:/config:rw" \
-    fredblgr/docker-webtop-3asl:2023`
+    fredblgr/docker-webtop-3asl:2023a`
 
 You may also use the scripts [start-3asl.sh](https://github.com/Frederic-Boulanger-UPS/docker-webtop-3asl/blob/main/start-3asl.sh) or [start-3asl.ps1](https://github.com/Frederic-Boulanger-UPS/docker-webtop-3asl/blob/main/start-3asl.ps1).
 
