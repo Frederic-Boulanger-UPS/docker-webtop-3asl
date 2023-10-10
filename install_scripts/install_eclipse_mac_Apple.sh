@@ -1,16 +1,21 @@
 eclipseversion="2023-09"
-eclipsename="Eclipse-Modeling-${eclipseversion}"
-# For Macs with Apple silicon (M1, M2)
-eclipsedmg="eclipse-modeling-${eclipseversion}-R-macosx-cocoa-aarch64.dmg"
-# For Macs with Intel silicon
-# eclipsedmg="eclipse-modeling-${eclipseversion}-R-macosx-cocoa-x86_64.dmg"
+eclipsename="Eclipse-Modeling-${eclipseversion}-Too"
+arch=$(uname -m)
+if [ $arch=="arm64" ]
+then
+	# For Macs with Apple silicon (M1, M2)
+	eclipsedmg="eclipse-modeling-${eclipseversion}-R-macosx-cocoa-aarch64.dmg"
+else
+	# For Macs with Intel silicon
+	eclipsedmg="eclipse-modeling-${eclipseversion}-R-macosx-cocoa-x86_64.dmg"
+fi
 mirror="https://laotzu.ftp.acc.umu.se/mirror/eclipse.org/technology/epp/downloads/release/${eclipseversion}/R/"
 
-echo "Downloading ${eclipsetgz} ..."
+echo "Downloading ${mirror}${eclipsedmg} ..."
 curl --remote-name "${mirror}${eclipsedmg}"
 
 echo "Moving eclipse to /Applications ..."
-diskutil image attach "$eclipsedmg"
+diskutil image attach "$eclipsedmg" || diskutil mount  "$eclipsedmg"
 cp -r /Volumes/Eclipse/Eclipse.app /Applications/${eclipsename}.app
 diskutil unmount /Volumes/Eclipse
 rm "${eclipsedmg}"
@@ -39,7 +44,7 @@ do
 	${eclipsebin} \
 			-nosplash \
 			-application org.eclipse.equinox.p2.director \
-			-repository https://download.eclipse.org/releases/2023-06/ \
+			-repository https://download.eclipse.org/releases/${eclipseversion}/ \
 			-installIU "${feature}" ; \
 done
 

@@ -22,11 +22,11 @@ RUN \
 # Install Eclipse and the required features/plugins
 RUN \
 	case ${arch} in \
-		arm64) eclipsetgz=eclipse-modeling-2023-06-R-linux-gtk-aarch64.tar.gz ;; \
-		amd64) eclipsetgz=eclipse-modeling-2023-06-R-linux-gtk-x86_64.tar.gz ;; \
+		arm64) eclipsetgz=eclipse-modeling-2023-09-R-linux-gtk-aarch64.tar.gz ;; \
+		amd64) eclipsetgz=eclipse-modeling-2023-09-R-linux-gtk-x86_64.tar.gz ;; \
 		*) echo "Unsupported architecture ${arch}" ;; \
 	esac ; \
-	curl --remote-name "https://rhlx01.hs-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/2023-06/R/${eclipsetgz}" ; \
+	curl --remote-name "https://rhlx01.hs-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/2023-09/R/${eclipsetgz}" ; \
 	tar zxf ${eclipsetgz} && rm ${eclipsetgz} ; \
 	mv eclipse /usr/local/eclipse ; \
 	for feature in \
@@ -47,7 +47,7 @@ RUN \
 		"org.eclipse.wst.xsl.feature.feature.group" ; \
 	do /usr/local/eclipse/eclipse -nosplash \
 			-application org.eclipse.equinox.p2.director \
-			-repository https://download.eclipse.org/releases/2023-06/ \
+			-repository https://download.eclipse.org/releases/2023-09/ \
 			-installIU "${feature}" ; \
 	done
 

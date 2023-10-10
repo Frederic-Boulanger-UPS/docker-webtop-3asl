@@ -1,5 +1,9 @@
-eclipsetgz="eclipse-modeling-2023-09-R-linux-gtk-x86_64.tar.gz"
-mirror="https://rhlx01.hs-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/2023-09/R/"
+release="2023-09"
+# For computers with Intel chips
+eclipsetgz="eclipse-modeling-${release}-R-linux-gtk-x86_64.tar.gz"
+# For computers with ARM chips
+# eclipsetgz="eclipse-modeling-${release}-R-linux-gtk-aarch64.tar.gz"
+mirror="https://rhlx01.hs-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/${release}/R/"
 
 echo "Downloading ${eclipsetgz} ..."
 wget "${mirror}${eclipsetgz}" ; \
@@ -29,7 +33,7 @@ do
 	echo "   ${feature}"
 	/usr/local/eclipse/eclipse -nosplash \
 				   -application org.eclipse.equinox.p2.director \
-				   -repository https://download.eclipse.org/releases/2023-06/ \
+				   -repository https://download.eclipse.org/releases/${release}/ \
 				   -installIU "${feature}" ; \
 done
 

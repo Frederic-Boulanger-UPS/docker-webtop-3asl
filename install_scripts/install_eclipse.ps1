@@ -1,13 +1,14 @@
-$eclipse="eclipse-modeling-2023-09-R-win32-x86_64.zip"
+$version="2023-09"
+$eclipse="eclipse-modeling-$version-R-win32-x86_64.zip"
 $client=new-object System.Net.WebClient
 
 Write-Host "Downloading $eclipse ..."
-$client.DownloadFile("https://rhlx01.hs-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/2023-09/R/$eclipse", "$PWD\$eclipse")
+$client.DownloadFile("https://rhlx01.hs-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/${version}/R/${eclipse}", "${PWD}\${eclipse}")
 
 Write-Host "Extracting eclipse to C:\eclipse ..."
-Expand-Archive -Path "$PWD\$eclipse" -DestinationPath "C:\"
+Expand-Archive -Path "${PWD}\${eclipse}" -DestinationPath "C:\"
 
-Remove-Item -Path "$PWD\$eclipse"
+Remove-Item -Path "${PWD}\${eclipse}"
 
 $env:Path += "; C:\eclipse"
 
@@ -31,7 +32,7 @@ foreach ($feature in `
 	Write-Host "    $feature"
 	C:\eclipse\eclipse -nosplash `
 				 -application org.eclipse.equinox.p2.director `
-				 -repository https://download.eclipse.org/releases/2023-06/ `
+				 -repository https://download.eclipse.org/releases/$version/ `
 				 -installIU $feature
 	$proc=Get-Process eclipse
 	Wait-Process -InputObject $proc
