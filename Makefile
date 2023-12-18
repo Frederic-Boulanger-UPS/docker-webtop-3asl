@@ -1,10 +1,10 @@
-w.PHONY: build manifest run debug push save clean clobber buildaltergo buildprovers
+.PHONY: build manifest run debug push save clean clobber buildaltergo buildprovers
 
 # REPO    = gitlab-research.centralesupelec.fr:4567/boulange/mydocker-images/
 REPO    = fredblgr/
 NAME    = docker-webtop-3asl
 TAG     = 2023
-MAINTAG = 2023b
+MAINTAG = 2023
 # Can be overriden with "make ARCH=amd64" for instance
 # ARCH   := $$(arch=$$(uname -m); if [ $$arch = "x86_64" ]; then echo amd64; elif [ $$arch = "aarch64" ]; then echo arm64; else echo $$arch; fi)
 ARCH   := $(shell if [ `uname -m` = "x86_64" ]; then echo "amd64"; elif [ `uname -m` = "aarch64" ]; then echo "arm64"; else echo `uname -m`; fi)
@@ -180,7 +180,8 @@ run_eclipse:
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 run_isabelle:
-	docker run --rm --detach \
+	docker run \
+	  --rm --detach \
 	  --platform linux/$(ARCH) \
 		--env="PUID=`id -u`" --env="PGID=`id -g`" \
 		--volume ${PWD}/config:/config:rw \

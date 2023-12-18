@@ -22,7 +22,7 @@ It is available on [Docker hub](https://hub.docker.com/repository/docker/fredblg
   
   `docker run --rm --detach --env="PUID=\`id -u\`" --env="PGID=\`id -g\`" \
   	--publish 3000:3000 --publish 3001:3001 --volume "$(pwd)/config:/config:rw" \
-    fredblgr/docker-webtop-3asl:2023a`
+    fredblgr/docker-webtop-3asl:2023`
 
 You may also use the scripts [start-3asl.sh](https://github.com/Frederic-Boulanger-UPS/docker-webtop-3asl/blob/main/start-3asl.sh) or [start-3asl.ps1](https://github.com/Frederic-Boulanger-UPS/docker-webtop-3asl/blob/main/start-3asl.ps1).
 

@@ -14,7 +14,7 @@ RUN \
 		amd64) isabelletgz=Isabelle2022_linux.tar.gz ;; \
 		*) echo "Unsupported architecture ${arch}" ;; \
 	esac ; \
-	curl --remote-name "https://isabelle.in.tum.de/dist/${isabelletgz}" ; \
+	curl --remote-name "https://isabelle.in.tum.de/website-Isabelle2022/dist/${isabelletgz}" ; \
 	tar zxf ${isabelletgz} && rm ${isabelletgz} ; \
 	mv Isabelle2022 /usr/local/Isabelle ; \
 	ln -s /usr/local/Isabelle/bin/isabelle /usr/local/bin/isabelle

@@ -63,6 +63,11 @@ RUN \
 	apt-get install -y \
 		graphviz
 
+# Install dependencies for Eclipse
+RUN \
+	apt-get install -y \
+		libwebkit2gtk-4.1-0
+
 # Install Logisim
 RUN \
 	apt-get install -y logisim \

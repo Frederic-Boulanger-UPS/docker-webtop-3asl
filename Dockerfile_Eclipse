@@ -9,7 +9,11 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN  \
 	apt-get update ; \
-	apt-get upgrade -y
+	apt-get upgrade -y ; \
+	apt-get autoclean ; \
+	apt-get autoremove ; \
+	apt-get install -y \
+		libwebkit2gtk-4.1-0
 
 RUN \
   apt-get clean ; \
