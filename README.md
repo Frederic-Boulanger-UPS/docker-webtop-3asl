@@ -9,7 +9,7 @@ which is maintained and quite often updated.
 
 This image uses Ubuntu 22.04 and the [IceWM](https://ice-wm.org) window manager.
 
-It is available on [Docker hub](https://hub.docker.com/repository/docker/fredblgr/docker-webtop-3asl/general)
+It is available on [Docker hub](https://hub.docker.com/r/fredblgr/docker-webtop-3asl)
 
 ## Details
 
