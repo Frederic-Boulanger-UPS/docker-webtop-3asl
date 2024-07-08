@@ -25,12 +25,13 @@ RUN \
 
 # Install Eclipse and the required features/plugins
 RUN \
+	release="2024-06" ; \
 	case ${arch} in \
-		arm64) eclipsetgz=eclipse-modeling-2023-09-R-linux-gtk-aarch64.tar.gz ;; \
-		amd64) eclipsetgz=eclipse-modeling-2023-09-R-linux-gtk-x86_64.tar.gz ;; \
+		arm64) eclipsetgz=eclipse-modeling-${release}-R-linux-gtk-aarch64.tar.gz ;; \
+		amd64) eclipsetgz=eclipse-modeling-${release}-R-linux-gtk-x86_64.tar.gz ;; \
 		*) echo "Unsupported architecture ${arch}" ;; \
 	esac ; \
-	curl --remote-name "https://rhlx01.hs-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/2023-09/R/${eclipsetgz}" ; \
+	curl --remote-name "https://mirror.leitecastro.com/eclipse/technology/epp/downloads/release/${release}/R/${eclipsetgz}" ; \
 	tar zxf ${eclipsetgz} && rm ${eclipsetgz} ; \
 	mv eclipse /usr/local/eclipse ; \
 	for feature in \

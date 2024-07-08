@@ -9,14 +9,15 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Install Isabelle
 RUN \
+	isabelle="Isabelle2024"
 	case ${arch} in \
-		arm64) isabelletgz=Isabelle2022_linux_arm.tar.gz ;; \
-		amd64) isabelletgz=Isabelle2022_linux.tar.gz ;; \
+		arm64) isabelletgz=${isabelle}_linux_arm.tar.gz ;; \
+		amd64) isabelletgz=${isabelle}_linux.tar.gz ;; \
 		*) echo "Unsupported architecture ${arch}" ;; \
 	esac ; \
-	curl --remote-name "https://isabelle.in.tum.de/website-Isabelle2022/dist/${isabelletgz}" ; \
+	curl --remote-name "https://isabelle.in.tum.de/dist/${isabelletgz}" ; \
 	tar zxf ${isabelletgz} && rm ${isabelletgz} ; \
-	mv Isabelle2022 /usr/local/Isabelle ; \
+	mv ${isabelle} /usr/local/Isabelle ; \
 	ln -s /usr/local/Isabelle/bin/isabelle /usr/local/bin/isabelle
 
 RUN  \
@@ -33,9 +34,10 @@ RUN \
 	coqide
 
 RUN \
-	curl -O https://why3.gitlabpages.inria.fr/releases/why3-1.6.0.tar.gz ; \
-	tar zxf why3-1.6.0.tar.gz && rm why3-1.6.0.tar.gz ; \
-	cd why3-1.6.0 ; \
+	why="why3-1.7.2"
+	curl -O https://why3.gitlabpages.inria.fr/releases/${why}.tar.gz ; \
+	tar zxf ${why}.tar.gz && rm ${why}.tar.gz ; \
+	cd ${why} ; \
 	./configure ; \
 	make ; \
 	echo "/usr/local/lib/why3/isabelle" >> /usr/local/Isabelle/etc/components ; \
