@@ -1,5 +1,5 @@
-$version="2023-09"
-$eclipse="eclipse-modeling-$version-R-win32-x86_64.zip"
+$version="2024-06"
+$eclipse="eclipse-modeling-${version}-R-win32-x86_64.zip"
 $client=new-object System.Net.WebClient
 
 Write-Host "Downloading $eclipse ..."
