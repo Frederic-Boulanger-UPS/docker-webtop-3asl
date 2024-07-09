@@ -29,7 +29,7 @@ RUN \
 	apt-get install -y \
 		nano \
 		featherpad \
-		rox-filer \
+		pcmanfm \
 		zip unzip
 
 RUN \
@@ -40,7 +40,7 @@ RUN \
 		libncurses-dev \
 		zlib1g-dev \
 		libsqlite3-dev \
-		sqlite
+		sqlite3
 
 RUN \
 	apt-get install -y \
@@ -53,7 +53,7 @@ RUN \
 	apt-get install -y \
 	make ocaml menhir libnum-ocaml-dev libmenhir-ocaml-dev libzarith-ocaml-dev \
 	libzip-ocaml-dev liblablgtk3-ocaml-dev liblablgtksourceview3-ocaml-dev \
-	libocamlgraph-ocaml-dev libre-ocaml-dev libjs-of-ocaml-dev alt-ergo z3 cvc4 \
+	libocamlgraph-ocaml-dev libre-ocaml-dev libjs-of-ocaml-dev z3 cvc4 cvc5 \
 	yaru-theme-icon \
 	adwaita-icon-theme-full \
 	coqide
@@ -76,8 +76,8 @@ RUN \
 RUN \
 	apt-get autoremove ; \
 	apt-get autoclean ; \
-  apt-get clean ; \
-  rm -rf \
+	apt-get clean ; \
+	rm -rf \
     /tmp/* \
     /config/* \
     /var/lib/apt/lists/* \

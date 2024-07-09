@@ -23,7 +23,7 @@ RUN \
 		libffi-dev \
 		libncurses-dev \
 		libsqlite3-dev \
-		sqlite \
+		sqlite3 \
 		mcpp \
 		swig \
 		zlib1g-dev

@@ -9,7 +9,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 # Install Isabelle
 RUN \
-	isabelle="Isabelle2024"
+	isabelle="Isabelle2024" ; \
 	case ${arch} in \
 		arm64) isabelletgz=${isabelle}_linux_arm.tar.gz ;; \
 		amd64) isabelletgz=${isabelle}_linux.tar.gz ;; \
@@ -28,26 +28,34 @@ RUN \
 	apt-get install -y \
 	make ocaml menhir libnum-ocaml-dev libmenhir-ocaml-dev libzarith-ocaml-dev \
 	libzip-ocaml-dev liblablgtk3-ocaml-dev liblablgtksourceview3-ocaml-dev \
-	libocamlgraph-ocaml-dev libre-ocaml-dev libjs-of-ocaml-dev alt-ergo z3 cvc4 \
+	libocamlgraph-ocaml-dev libre-ocaml-dev libjs-of-ocaml-dev z3 cvc4 cvc5 \
+	opam \
 	yaru-theme-icon \
 	adwaita-icon-theme-full \
 	coqide
 
 RUN \
-	why="why3-1.7.2"
+	mkdir /opt/opam ; \
+	opam init --root=/opt/opam --yes ; \
+	eval $(opam env --root=/opt/opam) ; \
+	export OPAMROOT=/opt/opam ; \
+	opam install -y alt-ergo
+
+RUN \
+	why="why3-1.7.2" ; \
 	curl -O https://why3.gitlabpages.inria.fr/releases/${why}.tar.gz ; \
 	tar zxf ${why}.tar.gz && rm ${why}.tar.gz ; \
 	cd ${why} ; \
 	./configure ; \
 	make ; \
-	echo "/usr/local/lib/why3/isabelle" >> /usr/local/Isabelle/etc/components ; \
+#	echo "/usr/local/lib/why3/isabelle" >> /usr/local/Isabelle/etc/components ; \
 	make install ; \
 	make byte ; \
 	make install-lib ; \
-	heapsdir=`ls -d /usr/local/Isabelle*/heaps/polyml-*`; \
-	homeheaps=`ls -d ${HOME}/.isabelle/Isabelle*/heaps/polyml-*`; \
-	mv ${homeheaps}/Why3 ${heapsdir}/ ; \
-  mv ${homeheaps}/log/* ${heapsdir}/log/
+#	heapsdir=`ls -d /usr/local/Isabelle*/heaps/polyml-*`; \
+#	homeheaps=`ls -d ${HOME}/.isabelle/Isabelle*/heaps/polyml-*`; \
+#	mv ${homeheaps}/Why3 ${heapsdir}/ ; \
+#	mv ${homeheaps}/log/* ${heapsdir}/log/
 
 RUN \
   apt-get clean ; \

@@ -27,7 +27,7 @@ RUN \
 	opam init --root=/opt/opam --yes ; \
 	eval $(opam env --root=/opt/opam) ; \
 	export OPAMROOT=/opt/opam ; \
-	opam install -y frama-c frama-c-metacsl
+	opam install -y frama-c frama-c-metacsl alt-ergo
  
 RUN \
   apt-get autoremove ; \

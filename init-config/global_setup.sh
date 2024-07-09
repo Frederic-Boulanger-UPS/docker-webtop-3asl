@@ -23,9 +23,10 @@ DesktopBackgroundColor=black
 cat - > /init-config/.icewm/menu << "==END=="
 ==END==
 
+# prog "ROX Filer" system-file-manager /usr/bin/rox-filer
 cat - > /init-config/.icewm/programs << "==END=="
 prog "Firefox Web Browser" firefox firefox
-prog "ROX Filer" system-file-manager /usr/bin/rox-filer
+prog "PCMan file manager" system-file-manager /usr/bin/pcmanfm
 prog "Eclipse Modeling" /usr/local/eclipse/icon.xpm /usr/local/eclipse/eclipse
 prog "Isabelle" /usr/local/Isabelle/lib/icons/isabelle.xpm /usr/local/Isabelle/bin/isabelle jedit
 prog "Logisim" /usr/share/logisim/icon.xpm /usr/local/bin/logisim
@@ -34,11 +35,12 @@ prog "FeatherPad" featherpad featherpad
 prog "UXTerm" mini.xterm uxterm
 ==END==
 
+# prog "File browser (Rox)" /usr/share/rox/images/application.png /usr/bin/rox-filer
 cat - > /init-config/.icewm/toolbar << "==END=="
 prog "Terminal" mini.xterm /usr/bin/uxterm
 prog "FeatherPad" featherpad featherpad
 prog "Firefox" firefox /usr/bin/firefox
-prog "File browser (Rox)" /usr/share/rox/images/application.png /usr/bin/rox-filer
+prog "File browser (PCMan)" /usr/share/icons/Humanity/apps/32/system-file-manager.svg /usr/bin/pcmanfm
 prog "Eclipse Modeling" /usr/local/eclipse/icon.xpm /usr/local/eclipse/eclipse
 prog "Isabelle" /usr/local/Isabelle/lib/icons/isabelle.xpm /usr/local/Isabelle/bin/isabelle jedit
 prog "Logisim" /usr/share/logisim/icon.xpm /usr/local/bin/logisim
@@ -54,6 +56,8 @@ Theme="motif/default.theme"
 ==END==
 
 cat - >> /init-config/.bashrc << "==END=="
+# Set base directory for XDG files
+export XDG_RUNTIME_DIR='/config'
 # Fix spurious Gtk error messages about accessibility bus
 export NO_AT_BRIDGE=1
 
