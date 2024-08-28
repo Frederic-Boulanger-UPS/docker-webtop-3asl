@@ -1,0 +1,77 @@
+FROM lscr.io/linuxserver/webtop:ubuntu-icewm
+
+# For which architecture to build (amd64 or arm64)
+ARG arch
+
+ENV HOME="/config"
+ENV TZ=Europe/Paris
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN  \
+	apt-get update ; \
+	apt-get upgrade -y ; \
+	apt-get autoclean ; \
+	apt-get autoremove ; \
+	apt-get install -y \
+		libwebkit2gtk-4.1-0
+
+RUN \
+  apt-get clean ; \
+  rm -rf \
+    /tmp/* \
+    /config/* \
+    /var/lib/apt/lists/* \
+    /var/tmp/*
+
+# Install Eclipse and the MicroC feature
+RUN \
+	release="2024-06" ; \
+	case ${arch} in \
+		arm64) eclipsetgz=eclipse-java-${release}-R-linux-gtk-aarch64.tar.gz ;; \
+		amd64) eclipsetgz=eclipse-java-${release}-R-linux-gtk-x86_64.tar.gz ;; \
+		*) echo "Unsupported architecture ${arch}" ;; \
+	esac ; \
+	curl --remote-name "https://mirror.leitecastro.com/eclipse/technology/epp/downloads/release/${release}/R/${eclipsetgz}" ; \
+	tar zxf ${eclipsetgz} && rm ${eclipsetgz} ; \
+	mv eclipse /usr/local/eclipse_microc
+
+RUN \
+	release="2024-06" ; \
+	for feature in \
+		"org.eclipse.xtext" \
+		"org.eclipse.xtext.ui" \
+		"org.eclipse.xtext.ui.shared" \
+		"org.eclipse.xtext.ui.codetemplates.ui" \
+		"org.eclipse.xtext.ide" \
+		"org.eclipse.xtext.xbase" \
+		"org.eclipse.xtext.xbase.ide" \
+		"org.eclipse.ocl" \
+		"org.eclipse.ocl.ecore" \
+		"org.eclipse.acceleo.model" \
+		"org.eclipse.acceleo.engine" ; \
+	do /usr/local/eclipse_microc/eclipse -nosplash \
+			-application org.eclipse.equinox.p2.director \
+			-repository https://download.eclipse.org/releases/${release}/ \
+			-installIU "${feature}" ; \
+	done
+
+RUN \
+	/usr/local/eclipse_microc/eclipse -nosplash \
+			-application org.eclipse.equinox.p2.director \
+			-repository https://wdi.centralesupelec.fr/boulanger/misc/microc-update-site \
+			-installIU "fr.centralesupelec.infonum.sl.microcfeature.feature.group"
+
+COPY mydocker_startup/wrapper_script.sh /usr/local/lib/wrapper_script.sh
+
+COPY init-config-eclipse-microc/* /init-config/
+
+RUN \
+	cd /init-config ; \
+	for script in *.sh ; \
+	do \
+		chmod +x $script ; \
+		./$script ; \
+		rm $script ; \
+	done
+
+ENTRYPOINT ["/bin/bash", "/usr/local/lib/wrapper_script.sh"]

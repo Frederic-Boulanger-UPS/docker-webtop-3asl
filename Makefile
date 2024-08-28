@@ -13,11 +13,13 @@ IMAGES := $(ARCHS:%=$(REPO)$(NAME):$(MAINTAG)-%)
 PLATFORMS := $$(first="True"; for a in $(ARCHS); do if [[ $$first == "True" ]]; then printf "linux/%s" $$a; first="False"; else printf ",linux/%s" $$a; fi; done)
 DOCKERFILE = Dockerfile
 DOCKERFILEECLIPSE = Dockerfile_Eclipse
+DOCKERFILEMICROC = Dockerfile_MicroC
 DOCKERFILEISABELLE = Dockerfile_Isabelle
 DOCKERFILESOUFFLE = Dockerfile_Souffle
 DOCKERFILEFRAMAC = Dockerfile_Frama-C
 ARCHIMAGE := $(REPO)$(NAME):$(MAINTAG)-$(ARCH)
 ARCHIMAGEECLIPSE := $(REPO)docker-webtop-eclipse:$(TAG)-$(ARCH)
+ARCHIMAGEMICROC := $(REPO)docker-webtop-microc:$(TAG)-$(ARCH)
 ARCHIMAGEISABELLE := $(REPO)docker-webtop-isabelle:$(TAG)-$(ARCH)
 ARCHIMAGESOUFFLE := $(REPO)docker-webtop-souffle:$(TAG)-$(ARCH)
 ARCHIMAGEFRAMAC := $(REPO)docker-webtop-framac:$(TAG)-$(ARCH)
@@ -32,6 +34,11 @@ help:
 # Build image
 build:
 	@echo "Building $(ARCHIMAGE) for $(ARCH) from $(DOCKERFILE)"
+	@if [ `docker images $(ARCHIMAGEMICROC) | wc -l` -lt 2 ] ; then \
+		echo "*****************************************" ; \
+		echo "* You should 'make build_microc' first *" ; \
+		echo "*****************************************" ; \
+	fi
 	@if [ `docker images $(ARCHIMAGEECLIPSE) | wc -l` -lt 2 ] ; then \
 		echo "*****************************************" ; \
 		echo "* You should 'make build_eclipse' first *" ; \
@@ -55,10 +62,23 @@ build:
 	docker build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
 							 --build-arg ECLIPSEIMAGE=$(ARCHIMAGEECLIPSE) \
+							 --build-arg MICROCIMAGE=$(ARCHIMAGEMICROC) \
 							 --build-arg ISABELLEIMAGE=$(ARCHIMAGEISABELLE) \
 							 --build-arg SOUFFLEIMAGE=$(ARCHIMAGESOUFFLE) \
 							 --build-arg FRAMACIMAGE=$(ARCHIMAGEFRAMAC) \
 							 --tag $(ARCHIMAGE) --file $(DOCKERFILE) .
+	@danglingimages=$$(docker images --filter "dangling=true" -q); \
+	if [[ $$danglingimages != "" ]]; then \
+	  docker rmi $$(docker images --filter "dangling=true" -q); \
+	fi
+
+# Build Eclipse MicroC feature image
+build_microc:
+	@echo "Building $(ARCHIMAGEMICROC) for $(ARCH) from $(DOCKERFILEECLIPSE)"
+	docker build --platform linux/$(ARCH) \
+							 --build-arg arch=$(ARCH) \
+							 --tag $(ARCHIMAGEMICROC) \
+							 --file $(DOCKERFILEMICROC) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
 	if [[ $$danglingimages != "" ]]; then \
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
@@ -164,6 +184,18 @@ run:
 		--publish 3001:3001 \
 		--name $(NAME) \
 		$(ARCHIMAGE)
+	sleep 10
+	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
+
+run_microc:
+	docker run --rm --detach \
+	  --platform linux/$(ARCH) \
+		--env="PUID=`id -u`" --env="PGID=`id -g`" \
+		--volume ${PWD}/config:/config:rw \
+		--publish 3000:3000 \
+		--publish 3001:3001 \
+		--name $(NAME) \
+		$(ARCHIMAGEMICROC)
 	sleep 10
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 

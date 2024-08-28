@@ -3,7 +3,7 @@ ARG arch
 # Isabelle image
 ARG ISABELLEIMAGE
 
-FROM ${ISABELLEIMAGE}
+FROM ${ISABELLEIMAGE} AS isabelleimage
 
 ENV HOME="/config"
 ENV TZ=Europe/Paris
