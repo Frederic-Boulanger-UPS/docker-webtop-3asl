@@ -3,10 +3,10 @@ cat - > /usr/share/applications/Isabelle.desktop << "==END=="
 Version=1.0
 Name=Isabelle
 GenericName=Proof assistant
-Exec=/usr/local/Isabelle/bin/isabelle jedit %F
+Exec=/usr/local/IsabelleLatest/bin/isabelle jedit %F
 StartupNotify=true
 Terminal=false
-Icon=/usr/local/Isabelle/lib/icons/isabelle.xpm
+Icon=/usr/local/IsabelleLatest/lib/icons/isabelle.xpm
 Type=Application
 Categories=Proof;Development;Science;Math
 MimeType=text/text;
@@ -22,8 +22,8 @@ timelimit = 5.000000
 
 [partial_prover]
 name = "Alt-Ergo"
-path = "/usr/bin/alt-ergo"
-version = "2.0.0"
+path = "/opt/opam/default/bin/alt-ergo"
+version = "2.5.4"
 
 [partial_prover]
 name = "CVC4"
@@ -31,9 +31,14 @@ path = "/usr/bin/cvc4"
 version = "1.8"
 
 [partial_prover]
+name = "CVC5"
+path = "/usr/local/bin/cvc5"
+version = "1.0.9"
+
+[partial_prover]
 name = "Coq"
 path = "/usr/bin/coqtop"
-version = "8.15.0"
+version = "8.18.0"
 
 [partial_prover]
 name = "Isabelle"

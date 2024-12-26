@@ -49,11 +49,6 @@ build:
 		echo "* You should 'make build_isabelle' first *" ; \
 		echo "******************************************" ; \
 	fi
-	@if [ `docker images $(ARCHIMAGESOUFFLE) | wc -l` -lt 2 ] ; then \
-		echo "******************************************" ; \
-		echo "* You should 'make build_souffle' first *" ; \
-		echo "******************************************" ; \
-	fi
 	@if [ `docker images $(ARCHIMAGEFRAMAC) | wc -l` -lt 2 ] ; then \
 		echo "******************************************" ; \
 		echo "* You should 'make build_framac' first *" ; \
@@ -64,7 +59,6 @@ build:
 							 --build-arg ECLIPSEIMAGE=$(ARCHIMAGEECLIPSE) \
 							 --build-arg MICROCIMAGE=$(ARCHIMAGEMICROC) \
 							 --build-arg ISABELLEIMAGE=$(ARCHIMAGEISABELLE) \
-							 --build-arg SOUFFLEIMAGE=$(ARCHIMAGESOUFFLE) \
 							 --build-arg FRAMACIMAGE=$(ARCHIMAGEFRAMAC) \
 							 --tag $(ARCHIMAGE) --file $(DOCKERFILE) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \

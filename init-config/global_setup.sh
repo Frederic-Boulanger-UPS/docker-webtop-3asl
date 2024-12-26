@@ -28,7 +28,7 @@ cat - > /init-config/.icewm/programs << "==END=="
 prog "Firefox Web Browser" firefox firefox
 prog "PCMan file manager" system-file-manager /usr/bin/pcmanfm
 prog "Eclipse Modeling" /usr/local/eclipse/icon.xpm /usr/local/eclipse/eclipse
-prog "Isabelle" /usr/local/Isabelle/lib/icons/isabelle.xpm /usr/local/Isabelle/bin/isabelle jedit
+prog "Isabelle" /usr/local/IsabelleLatest/lib/icons/isabelle.xpm /usr/local/IsabelleLatest/bin/isabelle jedit
 prog "Eclipse MicroC" /usr/local/eclipse_microc/microc.xpm /usr/local/eclipse_microc/eclipse
 prog "Logisim" /usr/share/logisim/icon.xpm /usr/local/bin/logisim
 prog "Coq IDE" coq.xpm coqide
@@ -43,7 +43,7 @@ prog "FeatherPad" featherpad featherpad
 prog "Firefox" firefox /usr/bin/firefox
 prog "File browser (PCMan)" /usr/share/icons/Humanity/apps/32/system-file-manager.svg /usr/bin/pcmanfm
 prog "Eclipse Modeling" /usr/local/eclipse/icon.xpm /usr/local/eclipse/eclipse
-prog "Isabelle" /usr/local/Isabelle/lib/icons/isabelle.xpm /usr/local/Isabelle/bin/isabelle jedit
+prog "Isabelle" /usr/local/IsabelleLatest/lib/icons/isabelle.xpm /usr/local/IsabelleLatest/bin/isabelle jedit
 prog "Eclipse MicroC" /usr/local/eclipse_microc/microc.xpm /usr/local/eclipse_microc/eclipse
 prog "Logisim" /usr/share/logisim/icon.xpm /usr/local/bin/logisim
 prog "Coq IDE" coq.xpm coqide

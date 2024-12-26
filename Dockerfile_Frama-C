@@ -1,7 +1,7 @@
 # For which architecture to build (amd64 or arm64)
 ARG arch
 # Isabelle image
-ARG ISABELLEIMAGE
+ARG ISABELLEIMAGE="invalid_image"
 
 FROM ${ISABELLEIMAGE} AS isabelleimage
 
@@ -27,7 +27,7 @@ RUN \
 	opam init --root=/opt/opam --yes ; \
 	eval $(opam env --root=/opt/opam) ; \
 	export OPAMROOT=/opt/opam ; \
-	opam install -y frama-c frama-c-metacsl alt-ergo
+	opam install -y frama-c.29.0 frama-c-metacsl.0.7
  
 RUN \
   apt-get autoremove ; \

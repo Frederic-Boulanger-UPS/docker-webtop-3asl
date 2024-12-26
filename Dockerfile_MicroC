@@ -6,6 +6,7 @@ ARG arch
 ENV HOME="/config"
 ENV TZ=Europe/Paris
 ARG DEBIAN_FRONTEND=noninteractive
+ARG ECLIPSE_RELEASE="2024-12"
 
 RUN  \
 	apt-get update ; \
@@ -25,18 +26,16 @@ RUN \
 
 # Install Eclipse and the MicroC feature
 RUN \
-	release="2024-06" ; \
 	case ${arch} in \
-		arm64) eclipsetgz=eclipse-java-${release}-R-linux-gtk-aarch64.tar.gz ;; \
-		amd64) eclipsetgz=eclipse-java-${release}-R-linux-gtk-x86_64.tar.gz ;; \
+		arm64) eclipsetgz=eclipse-java-${ECLIPSE_RELEASE}-R-linux-gtk-aarch64.tar.gz ;; \
+		amd64) eclipsetgz=eclipse-java-${ECLIPSE_RELEASE}-R-linux-gtk-x86_64.tar.gz ;; \
 		*) echo "Unsupported architecture ${arch}" ;; \
 	esac ; \
-	curl --remote-name "https://mirror.leitecastro.com/eclipse/technology/epp/downloads/release/${release}/R/${eclipsetgz}" ; \
+	curl --remote-name "https://mirror.ibcp.fr/pub/eclipse/technology/epp/downloads/release/${ECLIPSE_RELEASE}/R/${eclipsetgz}" ; \
 	tar zxf ${eclipsetgz} && rm ${eclipsetgz} ; \
 	mv eclipse /usr/local/eclipse_microc
 
 RUN \
-	release="2024-06" ; \
 	for feature in \
 		"org.eclipse.xtext" \
 		"org.eclipse.xtext.ui" \
@@ -51,7 +50,7 @@ RUN \
 		"org.eclipse.acceleo.engine" ; \
 	do /usr/local/eclipse_microc/eclipse -nosplash \
 			-application org.eclipse.equinox.p2.director \
-			-repository https://download.eclipse.org/releases/${release}/ \
+			-repository https://download.eclipse.org/releases/${ECLIPSE_RELEASE}/ \
 			-installIU "${feature}" ; \
 	done
 

@@ -6,8 +6,8 @@ ARG MICROCIMAGE
 ARG ECLIPSEIMAGE
 # Isabelle image
 ARG ISABELLEIMAGE
-# Souffle image
-ARG SOUFFLEIMAGE
+# # Souffle image
+# ARG SOUFFLEIMAGE
 # Frama-C image
 ARG FRAMACIMAGE
 
@@ -17,7 +17,7 @@ FROM ${ECLIPSEIMAGE} AS eclipseimage
 
 FROM ${ISABELLEIMAGE} AS isabelleimage
 
-FROM ${SOUFFLEIMAGE} AS souffleimage
+# FROM ${SOUFFLEIMAGE} AS souffleimage
 
 FROM ${FRAMACIMAGE} AS framacimage
 
@@ -57,7 +57,8 @@ RUN \
 	apt-get install -y \
 	make ocaml menhir libnum-ocaml-dev libmenhir-ocaml-dev libzarith-ocaml-dev \
 	libzip-ocaml-dev liblablgtk3-ocaml-dev liblablgtksourceview3-ocaml-dev \
-	libocamlgraph-ocaml-dev libre-ocaml-dev libjs-of-ocaml-dev z3 cvc4 cvc5 \
+	libocamlgraph-ocaml-dev libre-ocaml-dev libjs-of-ocaml-dev \
+#	z3 cvc4 cvc5 \
 	yaru-theme-icon \
 	adwaita-icon-theme-full \
 	coqide
@@ -98,17 +99,29 @@ RUN ln -s /usr/local/eclipse/eclipse /usr/local/bin/eclipse
 # Copy Isabelle installation from Isabelle image
 COPY --from=isabelleimage /usr/local/Isabelle /usr/local/Isabelle
 RUN ln -s /usr/local/Isabelle/bin/isabelle /usr/local/bin/isabelle
+COPY --from=isabelleimage /usr/local/IsabelleLatest /usr/local/IsabelleLatest
+RUN ln -s /usr/local/IsabelleLatest/bin/isabelle /usr/local/bin/isabelle-latest
 
 COPY --from=isabelleimage /usr/local/bin/why3 /usr/local/bin/why3
 COPY --from=isabelleimage /usr/local/lib/why3 /usr/local/lib/why3
 COPY --from=isabelleimage /usr/local/share/why3 /usr/local/share/why3
 
+# !!!!! Copy Z3, cvc4 and cvc5
+COPY --from=framacimage /usr/bin/z3 /usr/bin/z3
+COPY --from=framacimage /usr/bin/cvc4 /usr/bin/cvc4
+COPY --from=framacimage /usr/lib/*/libcvc4* /usr/lib/
+COPY --from=framacimage /usr/lib/*/libcln* /usr/lib/
+COPY --from=framacimage /usr/lib/*/libantlr3c* /usr/lib/
+COPY --from=framacimage /usr/local/bin/cvc5 /usr/local/bin/cvc5
+COPY --from=framacimage /usr/local/lib/libcvc5* /usr/local/lib/
+COPY --from=framacimage /usr/local/lib/libpoly* /usr/local/lib/
 
-# Copy Soufflé installation from Soufflé image
-COPY --from=souffleimage /usr/local/include/souffle /usr/local/include/souffle
-COPY --from=souffleimage /usr/local/bin/souffle /usr/local/bin/souffle
-COPY --from=souffleimage /usr/local/bin/souffleprof /usr/local/bin/souffleprof
-COPY --from=souffleimage /usr/local/bin/souffle-compile.py /usr/local/bin/souffle-compile.py
+
+# # Copy Soufflé installation from Soufflé image
+# COPY --from=souffleimage /usr/local/include/souffle /usr/local/include/souffle
+# COPY --from=souffleimage /usr/local/bin/souffle /usr/local/bin/souffle
+# COPY --from=souffleimage /usr/local/bin/souffleprof /usr/local/bin/souffleprof
+# COPY --from=souffleimage /usr/local/bin/souffle-compile.py /usr/local/bin/souffle-compile.py
 
 # Copy Frama-C installation from Frama-C image
 COPY --from=framacimage /opt/opam /opt/opam
