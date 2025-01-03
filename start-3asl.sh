@@ -23,6 +23,9 @@ else
   GROUP_ID=${SUDO_GID}
 fi
 
+# Make sure we have the latest version of the image
+docker pull ${REPO}${IMAGE}:${TAG} >& /dev/null
+
 docker run --rm --detach \
   --publish ${PORT}:${PORT} \
   --publish ${SPORT}:${SPORT} \
