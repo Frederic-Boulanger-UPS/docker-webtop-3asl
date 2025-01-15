@@ -25,6 +25,8 @@ FROM lscr.io/linuxserver/webtop:ubuntu-icewm
 
 ENV HOME="/config"
 ENV TZ=Europe/Paris
+ENV LIBGL_ALWAYS_SOFTWARE=1
+
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN \
@@ -50,7 +52,9 @@ RUN \
 	apt-get install -y \
 		yaru-theme-icon \
 		adwaita-icon-theme-full \
-		at-spi2-core
+		at-spi2-core \
+		mesa-utils \
+		libgl1-mesa-dri
 
 # Install dependencies for coq and why3
 RUN \

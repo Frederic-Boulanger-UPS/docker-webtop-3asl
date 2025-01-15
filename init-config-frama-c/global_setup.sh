@@ -52,6 +52,8 @@ Theme="motif/default.theme"
 cat - >> /init-config/.bashrc << "==END=="
 # Fix spurious Gtk error messages about accessibility bus
 export NO_AT_BRIDGE=1
+# Fix "MESA: error: ZINK: failed to choose pdev"
+export LIBGL_ALWAYS_SOFTWARE=1
 
 # Prefix of the current opam switch
 OPAM_SWITCH_PREFIX='/opt/opam/default'; export OPAM_SWITCH_PREFIX;

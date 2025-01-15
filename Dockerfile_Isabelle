@@ -5,6 +5,8 @@ ARG arch
 
 ENV HOME="/config"
 ENV TZ=Europe/Paris
+ENV LIBGL_ALWAYS_SOFTWARE=1
+
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install Isabelle 2022 for Why3
@@ -45,7 +47,9 @@ RUN \
 	opam \
 	yaru-theme-icon \
 	adwaita-icon-theme-full \
-	coqide
+	coqide \
+	mesa-utils \
+	libgl1-mesa-dri
 
 RUN \
 	curl --remote-name "https://codeload.github.com/cvc5/cvc5/tar.gz/refs/tags/cvc5-1.0.9" ; \

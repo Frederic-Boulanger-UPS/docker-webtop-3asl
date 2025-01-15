@@ -4,6 +4,8 @@ cat - > /init-config/.bashrc << "==END=="
 /usr/bin/icewmbg
 eval $(opam env --root=/opt/opam)
 export OPAMROOT=/opt/opam
+# Fix "MESA: error: ZINK: failed to choose pdev"
+export LIBGL_ALWAYS_SOFTWARE=1
 ==END==
 chmod +x /init-config/.bashrc
 
