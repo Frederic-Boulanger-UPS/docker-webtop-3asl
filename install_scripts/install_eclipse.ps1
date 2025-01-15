@@ -1,9 +1,9 @@
-$version="2024-06"
+$version="2024-12"
 $eclipse="eclipse-modeling-${version}-R-win32-x86_64.zip"
 $client=new-object System.Net.WebClient
 
 Write-Host "Downloading $eclipse ..."
-$client.DownloadFile("https://rhlx01.hs-esslingen.de/pub/Mirrors/eclipse/technology/epp/downloads/release/${version}/R/${eclipse}", "${PWD}\${eclipse}")
+$client.DownloadFile("https://mirror.ibcp.fr/pub/eclipse/technology/epp/downloads/release/${version}/R/${eclipse}", "${PWD}\${eclipse}")
 
 Write-Host "Extracting eclipse to C:\eclipse ..."
 Expand-Archive -Path "${PWD}\${eclipse}" -DestinationPath "C:\"

@@ -1,4 +1,4 @@
-eclipseversion="2024-06"
+eclipseversion="2024-12"
 eclipsename="Eclipse-Modeling-${eclipseversion}"
 platform="macosx-cocoa"
 arch=$(uname -m)
@@ -10,7 +10,7 @@ else
 	# For Macs with Intel silicon
 	eclipsedmg="eclipse-modeling-${eclipseversion}-R-${platform}-x86_64.dmg"
 fi
-mirror="https://mirror.leitecastro.com/eclipse/technology/epp/downloads/release/${eclipseversion}/R/"
+mirror="https://mirror.ibcp.fr/pub/eclipse/technology/epp/downloads/release/${eclipseversion}/R/"
 
 echo "Downloading ${mirror}${eclipsedmg} ..."
 curl --remote-name "${mirror}${eclipsedmg}"

@@ -1,4 +1,4 @@
-release="2024-06"
+release="2024-12"
 arch=$(uname -m)
 if [ "$arch" = "arm64" -o "$arch" = "aarch64" ]
 then
@@ -8,7 +8,7 @@ else
   # For computers with Intel chips
   eclipsetgz="eclipse-modeling-${release}-R-linux-gtk-x86_64.tar.gz"
 fi
-mirror="https://mirror.leitecastro.com/eclipse/technology/epp/downloads/release/${release}/R/"
+mirror="https://mirror.ibcp.fr/pub/eclipse/technology/epp/downloads/release/${release}/R/"
 
 echo "Downloading ${eclipsetgz} ..."
 wget "${mirror}${eclipsetgz}" ; \
