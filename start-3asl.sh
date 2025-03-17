@@ -24,7 +24,7 @@ else
 fi
 
 # Make sure we have the latest version of the image
-docker pull ${REPO}${IMAGE}:${TAG} >& /dev/null
+docker pull ${REPO}${IMAGE}:${TAG} > /dev/null 2>&1
 
 docker run --rm --detach \
   --publish ${PORT}:${PORT} \
