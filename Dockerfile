@@ -1,7 +1,7 @@
 # For which architecture to build (amd64 or arm64)
 ARG arch
-# Eclipse MicroCimage
-ARG MICROCIMAGE
+# # Eclipse MicroCimage
+# ARG MICROCIMAGE
 # Eclipse image
 ARG ECLIPSEIMAGE
 # Isabelle image
@@ -11,7 +11,7 @@ ARG ISABELLEIMAGE
 # Frama-C image
 ARG FRAMACIMAGE
 
-FROM ${MICROCIMAGE} AS microcimage
+# FROM ${MICROCIMAGE} AS microcimage
 
 FROM ${ECLIPSEIMAGE} AS eclipseimage
 
@@ -36,7 +36,9 @@ RUN \
 		nano \
 		featherpad \
 		pcmanfm \
-		zip unzip
+		lxterminal \
+		zip \
+		unzip
 
 RUN \
 	apt-get install -y \
@@ -92,9 +94,9 @@ RUN \
     /var/lib/apt/lists/* \
     /var/tmp/*
 
-# Copy Eclipse MicroC installation from MicroC image
-COPY --from=microcimage /usr/local/eclipse_microc /usr/local/eclipse_microc
-RUN ln -s /usr/local/eclipse_microc/eclipse /usr/local/bin/eclipse-microc
+# # Copy Eclipse MicroC installation from MicroC image
+# COPY --from=microcimage /usr/local/eclipse_microc /usr/local/eclipse_microc
+# RUN ln -s /usr/local/eclipse_microc/eclipse /usr/local/bin/eclipse-microc
 
 # Copy Eclipse installation from Eclipse image
 COPY --from=eclipseimage /usr/local/eclipse /usr/local/eclipse

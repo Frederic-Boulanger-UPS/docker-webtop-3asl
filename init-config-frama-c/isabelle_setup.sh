@@ -23,7 +23,7 @@ timelimit = 5.000000
 [partial_prover]
 name = "Alt-Ergo"
 path = "/opt/opam/default/bin/alt-ergo"
-version = "2.5.4"
+version = "2.6.0"
 
 [partial_prover]
 name = "CVC4"
@@ -33,7 +33,7 @@ version = "1.8"
 [partial_prover]
 name = "CVC5"
 path = "/usr/local/bin/cvc5"
-version = "1.0.9"
+version = "1.3.0"
 
 [partial_prover]
 name = "Coq"

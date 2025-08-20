@@ -6,7 +6,7 @@ ARG arch
 ENV HOME="/config"
 ENV TZ=Europe/Paris
 ARG DEBIAN_FRONTEND=noninteractive
-ARG ECLIPSE_RELEASE="2024-12"
+ARG ECLIPSE_RELEASE="2025-06"
 
 RUN  \
 	apt-get update ; \
@@ -14,7 +14,13 @@ RUN  \
 	apt-get autoclean ; \
 	apt-get autoremove ; \
 	apt-get install -y \
-		libwebkit2gtk-4.1-0
+		libwebkit2gtk-4.1-0 \
+		nano \
+		featherpad \
+		pcmanfm \
+		zip \
+		unzip \
+		lxterminal
 
 RUN \
   apt-get clean ; \

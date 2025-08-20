@@ -20,14 +20,20 @@ RUN \
 		graphviz \
 		yaru-theme-icon \
 		adwaita-icon-theme-full \
-		at-spi2-core
+		at-spi2-core \
+		nano \
+		featherpad \
+		pcmanfm \
+		zip \
+		unzip \
+		lxterminal
 
 RUN \
 	mkdir /opt/opam ; \
 	opam init --root=/opt/opam --yes ; \
 	eval $(opam env --root=/opt/opam) ; \
 	export OPAMROOT=/opt/opam ; \
-	opam install -y frama-c.29.0 frama-c-metacsl.0.7
+	opam install -y frama-c.31.0 frama-c-metacsl.0.9~beta
  
 RUN \
   apt-get autoremove ; \

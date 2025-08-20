@@ -3,8 +3,8 @@
 # REPO    = gitlab-research.centralesupelec.fr:4567/boulange/mydocker-images/
 REPO    = fredblgr/
 NAME    = docker-webtop-3asl
-TAG     = 2024
-MAINTAG = 2024
+TAG     = 2025
+MAINTAG = 2025
 # Can be overriden with "make ARCH=amd64" for instance
 # ARCH   := $$(arch=$$(uname -m); if [ $$arch = "x86_64" ]; then echo amd64; elif [ $$arch = "aarch64" ]; then echo arm64; else echo $$arch; fi)
 ARCH   := $(shell if [ `uname -m` = "x86_64" ]; then echo "amd64"; elif [ `uname -m` = "aarch64" ]; then echo "arm64"; else echo `uname -m`; fi)
@@ -15,7 +15,7 @@ DOCKERFILE = Dockerfile
 DOCKERFILEECLIPSE = Dockerfile_Eclipse
 DOCKERFILEMICROC = Dockerfile_MicroC
 DOCKERFILEISABELLE = Dockerfile_Isabelle
-DOCKERFILESOUFFLE = Dockerfile_Souffle
+# DOCKERFILESOUFFLE = Dockerfile_Souffle
 DOCKERFILEFRAMAC = Dockerfile_Frama-C
 ARCHIMAGE := $(REPO)$(NAME):$(MAINTAG)-$(ARCH)
 ARCHIMAGEECLIPSE := $(REPO)docker-webtop-eclipse:$(TAG)-$(ARCH)
@@ -34,11 +34,11 @@ help:
 # Build image
 build:
 	@echo "Building $(ARCHIMAGE) for $(ARCH) from $(DOCKERFILE)"
-	@if [ `docker images $(ARCHIMAGEMICROC) | wc -l` -lt 2 ] ; then \
-		echo "*****************************************" ; \
-		echo "* You should 'make build_microc' first *" ; \
-		echo "*****************************************" ; \
-	fi
+# 	@if [ `docker images $(ARCHIMAGEMICROC) | wc -l` -lt 2 ] ; then \
+# 		echo "*****************************************" ; \
+# 		echo "* You should 'make build_microc' first *" ; \
+# 		echo "*****************************************" ; \
+# 	fi
 	@if [ `docker images $(ARCHIMAGEECLIPSE) | wc -l` -lt 2 ] ; then \
 		echo "*****************************************" ; \
 		echo "* You should 'make build_eclipse' first *" ; \
@@ -102,17 +102,17 @@ build_isabelle:
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
 	fi
 
-# Build Souffle image
-build_souffle:
-	@echo "Building $(ARCHIMAGESOUFFLE) for $(ARCH) from $(DOCKERFILESOUFFLE)"
-	docker build --platform linux/$(ARCH) \
-							 --build-arg arch=$(ARCH) \
-							 --tag $(ARCHIMAGESOUFFLE) \
-							 --file $(DOCKERFILESOUFFLE) .
-	@danglingimages=$$(docker images --filter "dangling=true" -q); \
-	if [[ $$danglingimages != "" ]]; then \
-	  docker rmi $$(docker images --filter "dangling=true" -q); \
-	fi
+# # Build Souffle image
+# build_souffle:
+# 	@echo "Building $(ARCHIMAGESOUFFLE) for $(ARCH) from $(DOCKERFILESOUFFLE)"
+# 	docker build --platform linux/$(ARCH) \
+# 							 --build-arg arch=$(ARCH) \
+# 							 --tag $(ARCHIMAGESOUFFLE) \
+# 							 --file $(DOCKERFILESOUFFLE) .
+# 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
+# 	if [[ $$danglingimages != "" ]]; then \
+# 	  docker rmi $$(docker images --filter "dangling=true" -q); \
+# 	fi
 
 # Build Frama-C image
 build_framac:
@@ -165,7 +165,7 @@ clobber:
 	docker rmi $(REPO)$(NAME):$(MAINTAG) $(ARCHIMAGE)
 	docker rmi $(ARCHIMAGEECLIPSE)
 	docker rmi $(ARCHIMAGEISABELLE)
-	docker rmi $(DOCKERFILESOUFFLE)
+# 	docker rmi $(DOCKERFILESOUFFLE)
 	docker rmi $(ARCHIMAGEFRAMAC)
 	docker builder prune --all
 
@@ -218,17 +218,17 @@ run_isabelle:
 	sleep 10
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
-run_souffle:
-	docker run --rm --detach \
-	  --platform linux/$(ARCH) \
-		--env="PUID=`id -u`" --env="PGID=`id -g`" \
-		--volume ${PWD}/config:/config:rw \
-		--publish 3000:3000 \
-		--publish 3001:3001 \
-		--name $(NAME) \
-		$(ARCHIMAGESOUFFLE)
-	sleep 10
-	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
+# run_souffle:
+# 	docker run --rm --detach \
+# 	  --platform linux/$(ARCH) \
+# 		--env="PUID=`id -u`" --env="PGID=`id -g`" \
+# 		--volume ${PWD}/config:/config:rw \
+# 		--publish 3000:3000 \
+# 		--publish 3001:3001 \
+# 		--name $(NAME) \
+# 		$(ARCHIMAGESOUFFLE)
+# 	sleep 10
+# 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 run_framac:
 	docker run --rm --detach \

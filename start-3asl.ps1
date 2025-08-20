@@ -4,7 +4,7 @@
 # $REPO="gitlab-research.centralesupelec.fr:4567/boulange/mydocker-images/"
 $REPO="fredblgr/"
 $IMAGE="docker-webtop-3asl"
-$TAG="2024"
+$TAG="2025"
 $URL="localhost"
 $PORT="3000"
 $SPORT="3001"

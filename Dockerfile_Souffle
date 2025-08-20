@@ -14,6 +14,7 @@ RUN  \
 RUN \
 	apt-get install -y \
 		zip \
+		unzip \
 		cmake \
 		python3 \
 		g++ \
@@ -26,7 +27,11 @@ RUN \
 		sqlite3 \
 		mcpp \
 		swig \
-		zlib1g-dev
+		zlib1g-dev \
+		featherpad \
+		nano \
+		lxterminal \
+		pcmanfm
 
 RUN \
 	curl -O https://codeload.github.com/souffle-lang/souffle/zip/refs/heads/master ; \

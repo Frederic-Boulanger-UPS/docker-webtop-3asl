@@ -24,7 +24,7 @@ RUN \
 
 # Install latest Isabelle
 RUN \
-	isabelle="Isabelle2024" ; \
+	isabelle="Isabelle2025" ; \
 	case ${arch} in \
 		arm64) isabelletgz=${isabelle}_linux_arm.tar.gz ;; \
 		amd64) isabelletgz=${isabelle}_linux.tar.gz ;; \
@@ -49,29 +49,40 @@ RUN \
 	adwaita-icon-theme-full \
 	coqide \
 	mesa-utils \
-	libgl1-mesa-dri
+	libgl1-mesa-dri \
+	python3-pip \
+	python3-all-venv \
+	nano \
+	featherpad \
+	pcmanfm \
+	zip \
+	unzip \
+	lxterminal
 
+# 	cvc5="cvc5-1.0.9" ; \
 RUN \
-	curl --remote-name "https://codeload.github.com/cvc5/cvc5/tar.gz/refs/tags/cvc5-1.0.9" ; \
-	mv cvc5-1.0.9 cvc5-1.0.9.tar.gz ; \
-	tar zxf cvc5-1.0.9.tar.gz && rm cvc5-1.0.9.tar.gz ; \
-	cd cvc5-cvc5-1.0.9 ; \
+	cvc5="cvc5-1.3.0" ; \
+	echo "${cvc5}" ; \
+	curl --remote-name "https://codeload.github.com/cvc5/cvc5/tar.gz/refs/tags/${cvc5}" ; \
+	mv ${cvc5} ${cvc5}.tar.gz ; \
+	tar zxf ${cvc5}.tar.gz && rm ${cvc5}.tar.gz ; \
+	cd cvc5-${cvc5} ; \
 	./configure.sh --auto-download ; \
 	cd build ; \
 	make ; \
 	make install ; \
 	cd ../.. ; \
-	rm -r cvc5-cvc5-1.0.9
+	rm -r cvc5-${cvc5}
 
 RUN \
 	mkdir /opt/opam ; \
 	opam init --disable-sandboxing --root=/opt/opam --yes ; \
 	eval $(opam env --root=/opt/opam) ; \
 	export OPAMROOT=/opt/opam ; \
-	opam install -y alt-ergo.2.5.4
+	opam install -y alt-ergo.2.6.0
 
 RUN \
-	why="why3-1.7.2" ; \
+	why="why3-1.8.1" ; \
 	whyisabelle="Isabelle2022" ; \
 	curl -O https://why3.gitlabpages.inria.fr/releases/${why}.tar.gz ; \
 	tar zxf ${why}.tar.gz && rm ${why}.tar.gz ; \

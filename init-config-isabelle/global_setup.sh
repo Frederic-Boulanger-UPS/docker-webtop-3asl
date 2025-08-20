@@ -2,17 +2,29 @@ mkdir -p /init-config/.icewm
 
 cat - > /init-config/.bashrc << "==END=="
 /usr/bin/icewmbg
-eval $(opam env --root=/opt/opam)
+
+# eval $(opam env --root=/opt/opam)
 export OPAMROOT=/opt/opam
+# Current opam switch man dir
+MANPATH="$MANPATH":'/opt/opam/default/man'; export MANPATH;
+# Binary dir for opam switch default
+PATH="$PATH":'/opt/opam/default/bin'; export PATH;
+
 # Fix "MESA: error: ZINK: failed to choose pdev"
 export LIBGL_ALWAYS_SOFTWARE=1
+
+# Set base directory for XDG files
+export XDG_RUNTIME_DIR='/config'
+
+# Fix spurious Gtk error messages about accessibility bus
+export NO_AT_BRIDGE=1
 ==END==
 chmod +x /init-config/.bashrc
 
 cat - > /init-config/.icewm/preferences << "==END=="
 ConfirmLogout=1
 TimeFormat="%T"
-TerminalCommand="uxterm"
+TerminalCommand="lxterminal"
 LogoutCommand="sudo kill 1"
 ==END==
 
@@ -27,20 +39,24 @@ DesktopBackgroundColor=black
 cat - > /init-config/.icewm/menu << "==END=="
 ==END==
 
+# prog "ROX Filer" system-file-manager /usr/bin/rox-filer
+# prog "Eclipse MicroC" /usr/local/eclipse_microc/microc.xpm /usr/local/eclipse_microc/eclipse
 cat - > /init-config/.icewm/programs << "==END=="
 prog "Firefox Web Browser" firefox firefox
-prog "ROX Filer" system-file-manager /usr/bin/rox-filer
+prog "PCMan file manager" system-file-manager /usr/bin/pcmanfm
 prog "Isabelle" /usr/local/IsabelleLatest/lib/icons/isabelle.xpm /usr/local/IsabelleLatest/bin/isabelle jedit
 prog "Coq IDE" coq.xpm coqide
 prog "FeatherPad" featherpad featherpad
-prog "UXTerm" mini.xterm uxterm
+prog "LXTerminal" lxterminal lxterminal
 ==END==
 
+# prog "File browser (Rox)" /usr/share/rox/images/application.png /usr/bin/rox-filer
+# prog "Eclipse MicroC" /usr/local/eclipse_microc/microc.xpm /usr/local/eclipse_microc/eclipse
 cat - > /init-config/.icewm/toolbar << "==END=="
-prog "Terminal" mini.xterm /usr/bin/uxterm
+prog "Terminal" lxterminal /usr/bin/lxterminal
 prog "FeatherPad" featherpad featherpad
 prog "Firefox" firefox /usr/bin/firefox
-prog "File browser (Rox)" /usr/share/rox/images/application.png /usr/bin/rox-filer
+prog "File browser (PCMan)" /usr/share/icons/Humanity/apps/32/system-file-manager.svg /usr/bin/pcmanfm
 prog "Isabelle" /usr/local/IsabelleLatest/lib/icons/isabelle.xpm /usr/local/IsabelleLatest/bin/isabelle jedit
 prog "Coq IDE" coq.xpm coqide
 ==END==
