@@ -7,7 +7,7 @@ This image provides a linux with a GUI running either on a local docker or on My
 It is based on [WebTop image from LinuxServer.io](https://github.com/linuxserver/docker-webtop) 
 which is maintained and quite often updated.
 
-This image uses Ubuntu 22.04 and the [IceWM](https://ice-wm.org) window manager.
+This image uses Ubuntu 24.04 and the [IceWM](https://ice-wm.org) window manager.
 
 It is available on [Docker hub](https://hub.docker.com/r/fredblgr/docker-webtop-3asl)
 
@@ -22,7 +22,7 @@ It is available on [Docker hub](https://hub.docker.com/r/fredblgr/docker-webtop-
   
   `docker run --rm --detach --env="PUID=\`id -u\`" --env="PGID=\`id -g\`" \
   	--publish 3000:3000 --publish 3001:3001 --volume "$(pwd)/config:/config:rw" \
-    fredblgr/docker-webtop-3asl:2024`
+    fredblgr/docker-webtop-3asl:2025`
 
 You may also use the scripts [start-3asl.sh](https://github.com/Frederic-Boulanger-UPS/docker-webtop-3asl/blob/main/start-3asl.sh) or [start-3asl.ps1](https://github.com/Frederic-Boulanger-UPS/docker-webtop-3asl/blob/main/start-3asl.ps1).
 
