@@ -17,12 +17,14 @@ DOCKERFILEMICROC = Dockerfile_MicroC
 DOCKERFILEISABELLE = Dockerfile_Isabelle
 # DOCKERFILESOUFFLE = Dockerfile_Souffle
 DOCKERFILEFRAMAC = Dockerfile_Frama-C
+DOCKERFILEBASE = Dockerfile_base
 ARCHIMAGE := $(REPO)$(NAME):$(MAINTAG)-$(ARCH)
 ARCHIMAGEECLIPSE := $(REPO)docker-webtop-eclipse:$(TAG)-$(ARCH)
 ARCHIMAGEMICROC := $(REPO)docker-webtop-microc:$(TAG)-$(ARCH)
 ARCHIMAGEISABELLE := $(REPO)docker-webtop-isabelle:$(TAG)-$(ARCH)
-ARCHIMAGESOUFFLE := $(REPO)docker-webtop-souffle:$(TAG)-$(ARCH)
+# ARCHIMAGESOUFFLE := $(REPO)docker-webtop-souffle:$(TAG)-$(ARCH)
 ARCHIMAGEFRAMAC := $(REPO)docker-webtop-framac:$(TAG)-$(ARCH)
+ARCHIMAGEBASE := $(REPO)docker-webtop-base:$(TAG)-$(ARCH)
 
 help:
 	@echo "# Available targets:"
@@ -66,9 +68,21 @@ build:
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
 	fi
 
+# Build base image to experiment with installing new stuff
+build_base:
+	@echo "Building $(ARCHIMAGEBASE) for $(ARCH) from $(DOCKERFILEBASE)"
+	docker build --platform linux/$(ARCH) \
+							 --build-arg arch=$(ARCH) \
+							 --tag $(ARCHIMAGEBASE) \
+							 --file $(DOCKERFILEBASE) .
+	@danglingimages=$$(docker images --filter "dangling=true" -q); \
+	if [[ $$danglingimages != "" ]]; then \
+	  docker rmi $$(docker images --filter "dangling=true" -q); \
+	fi
+
 # Build Eclipse MicroC feature image
 build_microc:
-	@echo "Building $(ARCHIMAGEMICROC) for $(ARCH) from $(DOCKERFILEECLIPSE)"
+	@echo "Building $(ARCHIMAGEMICROC) for $(ARCH) from $(DOCKERFILEMICROC)"
 	docker build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
 							 --tag $(ARCHIMAGEMICROC) \
@@ -178,6 +192,18 @@ run:
 		--publish 3001:3001 \
 		--name $(NAME) \
 		$(ARCHIMAGE)
+	sleep 10
+	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
+
+run_base:
+	docker run --rm --detach \
+	  --platform linux/$(ARCH) \
+		--env="PUID=`id -u`" --env="PGID=`id -g`" \
+		--volume ${PWD}/config:/config:rw \
+		--publish 3000:3000 \
+		--publish 3001:3001 \
+		--name $(NAME) \
+		$(ARCHIMAGEBASE)
 	sleep 10
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
