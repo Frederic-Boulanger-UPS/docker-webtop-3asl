@@ -10,6 +10,7 @@ which is maintained and quite often updated.
 This image uses Ubuntu 24.04 and the [IceWM](https://ice-wm.org) window manager.
 
 It is available on [Docker hub](https://hub.docker.com/r/fredblgr/docker-webtop-3asl)
+and on [GitHub](https://github.com/Frederic-Boulanger-UPS/docker-webtop-3asl)
 
 ## Details
 
