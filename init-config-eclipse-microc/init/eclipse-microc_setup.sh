@@ -1,4 +1,4 @@
-mv microc.xpm /usr/local/eclipse_microc/
+cp microc.xpm /usr/local/eclipse_microc/
 
 cat - > /usr/share/applications/EclipseMicroC.desktop << "==END=="
 [Desktop Entry]

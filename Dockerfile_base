@@ -1,7 +1,7 @@
 # For which architecture to build (amd64 or arm64)
 ARG arch
 
-FROM lscr.io/linuxserver/webtop:ubuntu-icewm
+FROM lscr.io/linuxserver/webtop:ubuntu-xfce
 
 ENV HOME="/config"
 ENV TZ=Europe/Paris
@@ -28,11 +28,9 @@ RUN \
 RUN \
 	apt-get install -y \
 		nano \
-		featherpad \
-		pcmanfm \
-		lxterminal \
 		zip \
-		unzip
+		unzip \
+		firefox
 
 # Basic dev stuff
 RUN \
@@ -43,7 +41,8 @@ RUN \
 		libncurses-dev \
 		zlib1g-dev \
 		libsqlite3-dev \
-		sqlite3
+		sqlite3 \
+		python3-tk
 
 RUN \
 	apt-get autoremove ; \
@@ -57,16 +56,19 @@ RUN \
 
 COPY mydocker_startup/wrapper_script.sh /usr/local/lib/wrapper_script.sh
 
-COPY init-config/* /init-config/
+COPY init-config-base/fs/* /init-config/
+COPY init-config-base/init/* /init-config/init/
+COPY init-config-base/bin/killsession.py /usr/bin/xfce4-session-logout
+COPY init-config-base/xfce-app/* /init-config/.local/share/applications/
 
 RUN \
-	cd /init-config ; \
+	cd /init-config/init ; \
 	for script in *.sh ; \
 	do \
 		chmod +x $script ; \
 		./$script ; \
-		rm $script ; \
-	done
+	done ; \
+	cd .. ; rm -r init
 
 # Clean up
 RUN apt-get autoremove && apt-get autoclean && apt-get clean ; \

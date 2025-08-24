@@ -1,34 +1,11 @@
-FROM lscr.io/linuxserver/webtop:ubuntu-icewm
+# Base webtop image
+ARG BASEIMAGE
+FROM ${BASEIMAGE}
 
 # For which architecture to build (amd64 or arm64)
 ARG arch
 
-ENV HOME="/config"
-ENV TZ=Europe/Paris
-ARG DEBIAN_FRONTEND=noninteractive
 ARG ECLIPSE_RELEASE="2025-06"
-
-RUN  \
-	apt-get update ; \
-	apt-get upgrade -y ; \
-	apt-get autoclean ; \
-	apt-get autoremove ; \
-	apt-get install -y \
-		libwebkit2gtk-4.1-0 \
-		nano \
-		featherpad \
-		pcmanfm \
-		zip \
-		unzip \
-		lxterminal
-
-RUN \
-  apt-get clean ; \
-  rm -rf \
-    /tmp/* \
-    /config/* \
-    /var/lib/apt/lists/* \
-    /var/tmp/*
 
 # Install Eclipse and the MicroC feature
 RUN \
@@ -66,17 +43,27 @@ RUN \
 			-repository https://wdi.centralesupelec.fr/boulanger/misc/microc-update-site \
 			-installIU "fr.centralesupelec.infonum.sl.microcfeature.feature.group"
 
-COPY mydocker_startup/wrapper_script.sh /usr/local/lib/wrapper_script.sh
+# COPY mydocker_startup/wrapper_script.sh /usr/local/lib/wrapper_script.sh
 
-COPY init-config-eclipse-microc/* /init-config/
+RUN mkdir -p /init-config/init
+
+COPY init-config-eclipse-microc/init/* /init-config/init
 
 RUN \
-	cd /init-config ; \
+	cd /init-config/init ; \
 	for script in *.sh ; \
 	do \
 		chmod +x $script ; \
 		./$script ; \
-		rm $script ; \
-	done
+	done ; \
+	cd .. ; rm -r init
+
+# Clean up
+RUN apt-get autoremove && apt-get autoclean && apt-get clean ; \
+		rm -rf \
+    /tmp/* \
+    /config/* \
+    /var/lib/apt/lists/* \
+    /var/tmp/*
 
 ENTRYPOINT ["/bin/bash", "/usr/local/lib/wrapper_script.sh"]

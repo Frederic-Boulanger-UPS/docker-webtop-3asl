@@ -1,15 +1,16 @@
-# For which architecture to build (amd64 or arm64)
-ARG arch
+# Base webtop image
+ARG BASEIMAGE
 # # Eclipse MicroCimage
 # ARG MICROCIMAGE
 # Eclipse image
 ARG ECLIPSEIMAGE
 # Isabelle image
 ARG ISABELLEIMAGE
-# # Souffle image
-# ARG SOUFFLEIMAGE
 # Frama-C image
 ARG FRAMACIMAGE
+
+# For which architecture to build (amd64 or arm64)
+ARG arch
 
 # FROM ${MICROCIMAGE} AS microcimage
 
@@ -17,43 +18,20 @@ FROM ${ECLIPSEIMAGE} AS eclipseimage
 
 FROM ${ISABELLEIMAGE} AS isabelleimage
 
-# FROM ${SOUFFLEIMAGE} AS souffleimage
-
 FROM ${FRAMACIMAGE} AS framacimage
 
-FROM lscr.io/linuxserver/webtop:ubuntu-icewm
+FROM ${BASEIMAGE}
 
 ENV HOME="/config"
 ENV TZ=Europe/Paris
-ENV LIBGL_ALWAYS_SOFTWARE=1
-
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN \
 	apt-get update ; \
-	apt-get upgrade -y ; \
-	apt-get install -y \
-		nano \
-		featherpad \
-		pcmanfm \
-		lxterminal \
-		zip \
-		unzip
+	apt-get upgrade -y ;
 
 RUN \
 	apt-get install -y \
-		make \
-		g++ \
-		git \
-		libncurses-dev \
-		zlib1g-dev \
-		libsqlite3-dev \
-		sqlite3
-
-RUN \
-	apt-get install -y \
-		yaru-theme-icon \
-		adwaita-icon-theme-full \
 		at-spi2-core \
 		mesa-utils \
 		libgl1-mesa-dri
@@ -61,23 +39,29 @@ RUN \
 # Install dependencies for coq and why3
 RUN \
 	apt-get install -y \
-	make ocaml menhir libnum-ocaml-dev libmenhir-ocaml-dev libzarith-ocaml-dev \
-	libzip-ocaml-dev liblablgtk3-ocaml-dev liblablgtksourceview3-ocaml-dev \
-	libocamlgraph-ocaml-dev libre-ocaml-dev libjs-of-ocaml-dev \
-#	z3 cvc4 cvc5 \
-	yaru-theme-icon \
-	adwaita-icon-theme-full \
-	coqide
+		make \
+		ocaml \
+		menhir \
+		libnum-ocaml-dev \
+		libmenhir-ocaml-dev \
+		libzarith-ocaml-dev \
+		libzip-ocaml-dev \
+		liblablgtk3-ocaml-dev \
+		liblablgtksourceview3-ocaml-dev \
+		libocamlgraph-ocaml-dev \
+		libre-ocaml-dev \
+		libjs-of-ocaml-dev \
+		yaru-theme-icon \
+		adwaita-icon-theme-full \
+		coqide
 
 # Install dependencies for frama-c
 RUN \
 	apt-get install -y \
-		graphviz
+		graphviz \
+		python3-pip \
+		python3-all-venv
 
-# Install dependencies for Eclipse
-RUN \
-	apt-get install -y \
-		libwebkit2gtk-4.1-0
 
 # Install Logisim
 RUN \
@@ -113,38 +97,34 @@ COPY --from=isabelleimage /usr/local/lib/why3 /usr/local/lib/why3
 COPY --from=isabelleimage /usr/local/share/why3 /usr/local/share/why3
 
 # !!!!! Copy Z3, cvc4 and cvc5
-COPY --from=framacimage /usr/bin/z3 /usr/bin/z3
-COPY --from=framacimage /usr/bin/cvc4 /usr/bin/cvc4
-COPY --from=framacimage /usr/lib/*/libcvc4* /usr/lib/
-COPY --from=framacimage /usr/lib/*/libcln* /usr/lib/
-COPY --from=framacimage /usr/lib/*/libantlr3c* /usr/lib/
-COPY --from=framacimage /usr/local/bin/cvc5 /usr/local/bin/cvc5
-COPY --from=framacimage /usr/local/lib/libcvc5* /usr/local/lib/
-COPY --from=framacimage /usr/local/lib/libpoly* /usr/local/lib/
-
-
-# # Copy Soufflé installation from Soufflé image
-# COPY --from=souffleimage /usr/local/include/souffle /usr/local/include/souffle
-# COPY --from=souffleimage /usr/local/bin/souffle /usr/local/bin/souffle
-# COPY --from=souffleimage /usr/local/bin/souffleprof /usr/local/bin/souffleprof
-# COPY --from=souffleimage /usr/local/bin/souffle-compile.py /usr/local/bin/souffle-compile.py
+COPY --from=isabelleimage /usr/bin/z3 /usr/bin/z3
+COPY --from=isabelleimage /usr/bin/cvc4 /usr/bin/cvc4
+COPY --from=isabelleimage /usr/lib/*/libcvc4* /usr/lib/
+COPY --from=isabelleimage /usr/lib/*/libcln* /usr/lib/
+COPY --from=isabelleimage /usr/lib/*/libantlr3c* /usr/lib/
+COPY --from=isabelleimage /usr/local/bin/cvc5 /usr/local/bin/cvc5
+COPY --from=isabelleimage /usr/local/lib/libcvc5* /usr/local/lib/
+COPY --from=isabelleimage /usr/local/lib/libpoly* /usr/local/lib/
 
 # Copy Frama-C installation from Frama-C image
 COPY --from=framacimage /opt/opam /opt/opam
 
+RUN mkdir -p /init-config/init
 
-COPY mydocker_startup/wrapper_script.sh /usr/local/lib/wrapper_script.sh
-
-COPY init-config/* /init-config/
+COPY init-config/init/* /init-config/init/
+COPY init-config-eclipse/init/eclipse_setup.sh /init-config/init/
+# COPY init-config-eclipse-microc/init/* /init-config/init/
+COPY init-config-frama-c/init/global_setup.sh /init-config/init/
+COPY init-config-isabelle/init/isabelle_setup.sh /init-config/init/
 
 RUN \
-	cd /init-config ; \
+	cd /init-config/init ; \
 	for script in *.sh ; \
 	do \
 		chmod +x $script ; \
 		./$script ; \
-		rm $script ; \
-	done
+	done ; \
+	cd .. ; rm -r init
 
 # Clean up
 RUN apt-get autoremove && apt-get autoclean && apt-get clean ; \

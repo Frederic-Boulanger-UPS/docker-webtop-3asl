@@ -12,19 +12,19 @@ ARCHS   = amd64 arm64
 IMAGES := $(ARCHS:%=$(REPO)$(NAME):$(MAINTAG)-%)
 PLATFORMS := $$(first="True"; for a in $(ARCHS); do if [[ $$first == "True" ]]; then printf "linux/%s" $$a; first="False"; else printf ",linux/%s" $$a; fi; done)
 DOCKERFILE = Dockerfile
+DOCKERFILEBASE = Dockerfile_base
 DOCKERFILEECLIPSE = Dockerfile_Eclipse
 DOCKERFILEMICROC = Dockerfile_MicroC
 DOCKERFILEISABELLE = Dockerfile_Isabelle
 # DOCKERFILESOUFFLE = Dockerfile_Souffle
 DOCKERFILEFRAMAC = Dockerfile_Frama-C
-DOCKERFILEBASE = Dockerfile_base
 ARCHIMAGE := $(REPO)$(NAME):$(MAINTAG)-$(ARCH)
+ARCHIMAGEBASE := $(REPO)docker-webtop-base:$(TAG)-$(ARCH)
 ARCHIMAGEECLIPSE := $(REPO)docker-webtop-eclipse:$(TAG)-$(ARCH)
 ARCHIMAGEMICROC := $(REPO)docker-webtop-microc:$(TAG)-$(ARCH)
 ARCHIMAGEISABELLE := $(REPO)docker-webtop-isabelle:$(TAG)-$(ARCH)
 # ARCHIMAGESOUFFLE := $(REPO)docker-webtop-souffle:$(TAG)-$(ARCH)
 ARCHIMAGEFRAMAC := $(REPO)docker-webtop-framac:$(TAG)-$(ARCH)
-ARCHIMAGEBASE := $(REPO)docker-webtop-base:$(TAG)-$(ARCH)
 
 help:
 	@echo "# Available targets:"
@@ -36,11 +36,11 @@ help:
 # Build image
 build:
 	@echo "Building $(ARCHIMAGE) for $(ARCH) from $(DOCKERFILE)"
-# 	@if [ `docker images $(ARCHIMAGEMICROC) | wc -l` -lt 2 ] ; then \
-# 		echo "*****************************************" ; \
-# 		echo "* You should 'make build_microc' first *" ; \
-# 		echo "*****************************************" ; \
-# 	fi
+	@if [ `docker images $(ARCHIMAGEBASE) | wc -l` -lt 2 ] ; then \
+		echo "*****************************************" ; \
+		echo "* You should 'make build_base' first *" ; \
+		echo "*****************************************" ; \
+	fi
 	@if [ `docker images $(ARCHIMAGEECLIPSE) | wc -l` -lt 2 ] ; then \
 		echo "*****************************************" ; \
 		echo "* You should 'make build_eclipse' first *" ; \
@@ -58,6 +58,7 @@ build:
 	fi
 	docker build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
+							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
 							 --build-arg ECLIPSEIMAGE=$(ARCHIMAGEECLIPSE) \
 							 --build-arg MICROCIMAGE=$(ARCHIMAGEMICROC) \
 							 --build-arg ISABELLEIMAGE=$(ARCHIMAGEISABELLE) \
@@ -85,6 +86,7 @@ build_microc:
 	@echo "Building $(ARCHIMAGEMICROC) for $(ARCH) from $(DOCKERFILEMICROC)"
 	docker build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
+							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
 							 --tag $(ARCHIMAGEMICROC) \
 							 --file $(DOCKERFILEMICROC) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
@@ -97,6 +99,7 @@ build_eclipse:
 	@echo "Building $(ARCHIMAGEECLIPSE) for $(ARCH) from $(DOCKERFILEECLIPSE)"
 	docker build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
+							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
 							 --tag $(ARCHIMAGEECLIPSE) \
 							 --file $(DOCKERFILEECLIPSE) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
@@ -109,6 +112,7 @@ build_isabelle:
 	@echo "Building $(ARCHIMAGEISABELLE) for $(ARCH) from $(DOCKERFILEISABELLE)"
 	docker build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
+							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
 							 --tag $(ARCHIMAGEISABELLE) \
 							 --file $(DOCKERFILEISABELLE) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
@@ -121,6 +125,7 @@ build_isabelle:
 # 	@echo "Building $(ARCHIMAGESOUFFLE) for $(ARCH) from $(DOCKERFILESOUFFLE)"
 # 	docker build --platform linux/$(ARCH) \
 # 							 --build-arg arch=$(ARCH) \
+# 							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
 # 							 --tag $(ARCHIMAGESOUFFLE) \
 # 							 --file $(DOCKERFILESOUFFLE) .
 # 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
@@ -133,6 +138,7 @@ build_framac:
 	@echo "Building $(ARCHIMAGEFRAMAC) for $(ARCH) from $(DOCKERFILEFRAMAC)"
 	docker build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
+							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
 							 --build-arg ISABELLEIMAGE=$(ARCHIMAGEISABELLE) \
 							 --tag $(ARCHIMAGEFRAMAC) \
 							 --file $(DOCKERFILEFRAMAC) .
@@ -195,6 +201,7 @@ run:
 	sleep 10
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
+#	  --cap-add SYS_ADMIN
 run_base:
 	docker run --rm --detach \
 	  --platform linux/$(ARCH) \
