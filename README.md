@@ -21,12 +21,12 @@ and on [GitHub](https://github.com/Frederic-Boulanger-UPS/docker-webtop-3asl)
   image, assuming you are in a specific folder containing a "config" subfolder that will 
   be shared with the container at `/config`, with:
   
-  `docker run --rm --detach --env="PUID=\`id -u\`" --env="PGID=\`id -g\`" \
-  	--publish 3000:3000 --publish 3001:3001 --volume "$(pwd)/config:/config:rw" \
-    fredblgr/docker-webtop-3asl:2025`
+  `docker run --rm --detach \
+  						--publish 3000:3000 \
+  						--publish 3001:3001 \
+  						--volume "$(pwd)/config:/config:rw" \
+    			fredblgr/docker-webtop-3asl:2025`
 
 You may also use the scripts [start-3asl.sh](https://github.com/Frederic-Boulanger-UPS/docker-webtop-3asl/blob/main/start-3asl.sh) or [start-3asl.ps1](https://github.com/Frederic-Boulanger-UPS/docker-webtop-3asl/blob/main/start-3asl.ps1).
-
-The start-3asl.sh script takes care of setting your user and group id correctly in the container, even if you start docker using sudo.
 
 The start-3asl.ps1 script can be used after allowing the execution of scripts with the command ```Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser```.

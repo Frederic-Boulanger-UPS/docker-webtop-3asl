@@ -31,8 +31,6 @@ Typical usage is:
 ```
 docker run --rm --detach --publish 3000:3000 \
            --volume ${PWD}/config:/config:rw \
-           --env PUID=`id -u` \
-           --env PGID=`id -g` \
            --name webtop-3asl fredblgr/docker-webtop-3asl:2025
 ```
 
@@ -46,8 +44,6 @@ There is a [`start-3asl.ps1`](https://github.com/Frederic-Boulanger-UPS/docker-w
 
 You browser should display an Ubuntu desktop. Else, check the console for errors and point your web browser at [http://localhost:3000](http://localhost3000)
 
-
-If you use the `start-3asl.sh` script, your user and group id in the container will be the same as on the host (even if you need sudo to start Docker), so the files created by the container will belong to you.
 
 License
 ==================
