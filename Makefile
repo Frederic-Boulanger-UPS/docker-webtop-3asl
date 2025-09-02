@@ -18,6 +18,7 @@ DOCKERFILEMICROC = Dockerfile_MicroC
 DOCKERFILEISABELLE = Dockerfile_Isabelle
 # DOCKERFILESOUFFLE = Dockerfile_Souffle
 DOCKERFILEFRAMAC = Dockerfile_Frama-C
+DOCKERFILEATELIERB = Dockerfile_AtelierB
 ARCHIMAGE := $(REPO)$(NAME):$(MAINTAG)-$(ARCH)
 ARCHIMAGEBASE := $(REPO)docker-webtop-base:$(TAG)-$(ARCH)
 ARCHIMAGEECLIPSE := $(REPO)docker-webtop-eclipse:$(TAG)-$(ARCH)
@@ -25,6 +26,7 @@ ARCHIMAGEMICROC := $(REPO)docker-webtop-microc:$(TAG)-$(ARCH)
 ARCHIMAGEISABELLE := $(REPO)docker-webtop-isabelle:$(TAG)-$(ARCH)
 # ARCHIMAGESOUFFLE := $(REPO)docker-webtop-souffle:$(TAG)-$(ARCH)
 ARCHIMAGEFRAMAC := $(REPO)docker-webtop-framac:$(TAG)-$(ARCH)
+ARCHIMAGEATELIERB := $(REPO)docker-webtop-atelierb:$(TAG)-$(ARCH)
 
 help:
 	@echo "# Available targets:"
@@ -142,6 +144,19 @@ build_framac:
 							 --build-arg ISABELLEIMAGE=$(ARCHIMAGEISABELLE) \
 							 --tag $(ARCHIMAGEFRAMAC) \
 							 --file $(DOCKERFILEFRAMAC) .
+	@danglingimages=$$(docker images --filter "dangling=true" -q); \
+	if [[ $$danglingimages != "" ]]; then \
+	  docker rmi $$(docker images --filter "dangling=true" -q); \
+	fi
+
+# Build AtelierB image
+build_atelierb:
+	@echo "Building $(ARCHIMAGEATELIERB) for $(ARCH) from $(DOCKERFILEATELIERB)"
+	docker build --platform linux/$(ARCH) \
+							 --build-arg arch=$(ARCH) \
+							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
+							 --tag $(ARCHIMAGEATELIERB) \
+							 --file $(DOCKERFILEATELIERB) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
 	if [[ $$danglingimages != "" ]]; then \
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
@@ -272,6 +287,17 @@ run_framac:
 		--publish 3001:3001 \
 		--name $(NAME) \
 		$(ARCHIMAGEFRAMAC)
+	sleep 10
+	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
+
+run_framac:
+	docker run --rm --detach \
+	  --platform linux/$(ARCH) \
+		--volume ${PWD}/config:/config:rw \
+		--publish 3000:3000 \
+		--publish 3001:3001 \
+		--name $(NAME) \
+		$(ARCHIMAGEATELIERB)
 	sleep 10
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
