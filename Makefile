@@ -290,7 +290,7 @@ run_framac:
 	sleep 10
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
-run_framac:
+run_atelierb:
 	docker run --rm --detach \
 	  --platform linux/$(ARCH) \
 		--volume ${PWD}/config:/config:rw \
