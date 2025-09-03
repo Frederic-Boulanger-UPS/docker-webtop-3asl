@@ -60,6 +60,7 @@ build:
 	fi
 	docker build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
+							 --provenance=mode=max \
 							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
 							 --build-arg ECLIPSEIMAGE=$(ARCHIMAGEECLIPSE) \
 							 --build-arg MICROCIMAGE=$(ARCHIMAGEMICROC) \
