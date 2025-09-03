@@ -68,7 +68,7 @@ build:
 							 --build-arg FRAMACIMAGE=$(ARCHIMAGEFRAMAC) \
 							 --tag $(ARCHIMAGE) --file $(DOCKERFILE) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
-	if [[ $$danglingimages != "" ]]; then \
+	if [ "$$danglingimages" != "" ]; then \
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
 	fi
 
@@ -80,7 +80,7 @@ build_base:
 							 --tag $(ARCHIMAGEBASE) \
 							 --file $(DOCKERFILEBASE) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
-	if [[ $$danglingimages != "" ]]; then \
+	if [ "$$danglingimages" != "" ]; then \
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
 	fi
 
@@ -93,7 +93,7 @@ build_microc:
 							 --tag $(ARCHIMAGEMICROC) \
 							 --file $(DOCKERFILEMICROC) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
-	if [[ $$danglingimages != "" ]]; then \
+	if [ "$$danglingimages" != "" ]; then \
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
 	fi
 
@@ -106,7 +106,7 @@ build_eclipse:
 							 --tag $(ARCHIMAGEECLIPSE) \
 							 --file $(DOCKERFILEECLIPSE) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
-	if [[ $$danglingimages != "" ]]; then \
+	if [ "$$danglingimages" != "" ]; then \
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
 	fi
 
@@ -119,7 +119,7 @@ build_isabelle:
 							 --tag $(ARCHIMAGEISABELLE) \
 							 --file $(DOCKERFILEISABELLE) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
-	if [[ $$danglingimages != "" ]]; then \
+	if [ "$$danglingimages" != "" ]; then \
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
 	fi
 
@@ -132,7 +132,7 @@ build_isabelle:
 # 							 --tag $(ARCHIMAGESOUFFLE) \
 # 							 --file $(DOCKERFILESOUFFLE) .
 # 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
-# 	if [[ $$danglingimages != "" ]]; then \
+# 	if [ "$$danglingimages" != "" ]; then \
 # 	  docker rmi $$(docker images --filter "dangling=true" -q); \
 # 	fi
 
@@ -146,7 +146,7 @@ build_framac:
 							 --tag $(ARCHIMAGEFRAMAC) \
 							 --file $(DOCKERFILEFRAMAC) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
-	if [[ $$danglingimages != "" ]]; then \
+	if [ "$$danglingimages" != "" ]; then \
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
 	fi
 
@@ -159,7 +159,7 @@ build_atelierb:
 							 --tag $(ARCHIMAGEATELIERB) \
 							 --file $(DOCKERFILEATELIERB) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
-	if [[ $$danglingimages != "" ]]; then \
+	if [ "$$danglingimages" != "" ]; then \
 	  docker rmi $$(docker images --filter "dangling=true" -q); \
 	fi
 
