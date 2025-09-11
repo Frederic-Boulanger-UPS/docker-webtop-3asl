@@ -8,6 +8,8 @@ ARG ECLIPSEIMAGE
 ARG ISABELLEIMAGE
 # Frama-C image
 ARG FRAMACIMAGE
+# AtelierB image
+ARG ATELIERBIMAGE
 
 # For which architecture to build (amd64 or arm64)
 ARG arch
@@ -20,11 +22,17 @@ FROM ${ISABELLEIMAGE} AS isabelleimage
 
 FROM ${FRAMACIMAGE} AS framacimage
 
+FROM ${ATELIERBIMAGE} AS atelierbimage
+
 FROM ${BASEIMAGE}
 
 ENV HOME="/config"
 ENV TZ=Europe/Paris
 ARG DEBIAN_FRONTEND=noninteractive
+
+ARG ATELIERB_YEAR="2024/09"
+ARG ATELIERB_RELEASE="atelierb-cssp-24.04"
+ARG ATELIERB_PLATFORM="ubuntu-24.04"
 
 RUN \
 	apt-get update ; \
@@ -62,6 +70,20 @@ RUN \
 		python3-pip \
 		python3-all-venv
 
+# Install dependencies for Atelier B
+RUN \
+	apt-get install -y \
+		cmake \
+		python3-full \
+		python3-tk \
+		python3-pip \
+		qml-module-qtmultimedia \
+		qml-module-qtquick-controls2 \
+		qml-module-qtquick-controls \
+		qtquickcontrols2-5-dev \
+		qml-module-qtquick-dialogs \
+		qml-module-qtquick-extras \
+		qtdeclarative5-dev
 
 # Install Logisim
 RUN \
@@ -109,6 +131,10 @@ COPY --from=isabelleimage /usr/local/lib/libpoly* /usr/local/lib/
 # Copy Frama-C installation from Frama-C image
 COPY --from=framacimage /opt/opam /opt/opam
 
+# Copy Atelier B
+COPY --from=atelierbimage /opt/${ATELIERB_RELEASE} /opt/${ATELIERB_RELEASE}
+COPY --from=atelierbimage /usr/share/applications/AtelierB.desktop /usr/share/applications/AtelierB.desktop
+
 RUN mkdir -p /init-config/init
 
 COPY init-config/init/* /init-config/init/
@@ -116,6 +142,7 @@ COPY init-config-eclipse/init/eclipse_setup.sh /init-config/init/
 # COPY init-config-eclipse-microc/init/* /init-config/init/
 COPY init-config-frama-c/init/global_setup.sh /init-config/init/
 COPY init-config-isabelle/init/isabelle_setup.sh /init-config/init/
+COPY init-config-atelierb/init/global_setup.sh /init-config/init/
 
 RUN \
 	cd /init-config/init ; \

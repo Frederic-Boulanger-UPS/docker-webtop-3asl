@@ -60,12 +60,12 @@ build:
 	fi
 	docker build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
-							 --provenance=mode=max \
 							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
 							 --build-arg ECLIPSEIMAGE=$(ARCHIMAGEECLIPSE) \
 							 --build-arg MICROCIMAGE=$(ARCHIMAGEMICROC) \
 							 --build-arg ISABELLEIMAGE=$(ARCHIMAGEISABELLE) \
 							 --build-arg FRAMACIMAGE=$(ARCHIMAGEFRAMAC) \
+							 --build-arg ATELIERBIMAGE=$(ARCHIMAGEATELIERB) \
 							 --tag $(ARCHIMAGE) --file $(DOCKERFILE) .
 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
 	if [ "$$danglingimages" != "" ]; then \

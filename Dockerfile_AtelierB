@@ -18,11 +18,11 @@ ARG ATELIERB_DEB=${ATELIERB_RELEASE}-${ATELIERB_PLATFORM}.deb
 # AtelierB CSP Educational version
 RUN \
 	case ${arch} in \
-		arm64) echo "# Error: architecture arm64 is not supported by AtelierB"; exit 1 ;; \
-		amd64) echo "Installing ${ATELIERB_DEB}" ;; \
+		arm64) echo "# Error: architecture arm64 is not supported by AtelierB" ;; \
+		amd64) echo "Installing ${ATELIERB_DEB}"; \
+					 curl --remote-name "https://www.atelierb.eu/wp-content/uploads/${ATELIERB_YEAR}/${ATELIERB_DEB}" ;; \
 		*) echo "Unsupported architecture ${arch}"; exit 1 ;; \
-	esac ; \
-	curl --remote-name "https://www.atelierb.eu/wp-content/uploads/${ATELIERB_YEAR}/${ATELIERB_DEB}" ;
+	esac
 	
 # Install dependencies
 RUN \
@@ -42,12 +42,19 @@ RUN \
 
 # Install AtelierB package
 RUN \
-	apt-get install --yes ./${ATELIERB_DEB}; \
-	sed -e '/^Categories=.*$/d' \
-		/opt/${ATELIERB_RELEASE}/bin/AtelierB.desktop \
-			> /usr/share/applications/AtelierB.desktop ; \
-		echo "Categories=Proof;Development;Science;Math" \
-			>> /usr/share/applications/AtelierB.desktop
+	case ${arch} in \
+		arm64) echo "# Error: architecture arm64 is not supported by AtelierB"; \
+					 mkdir -p /opt/${ATELIERB_RELEASE}; \
+					 touch /usr/share/applications/AtelierB.desktop ;; \
+		amd64) echo "Installing ${ATELIERB_DEB}"; \
+						apt-get install --yes ./${ATELIERB_DEB}; \
+						sed -e '/^Categories=.*$/d' \
+							/opt/${ATELIERB_RELEASE}/bin/AtelierB.desktop \
+						> /usr/share/applications/AtelierB.desktop ; \
+						echo "Categories=Proof;Development;Science;Math" \
+							>> /usr/share/applications/AtelierB.desktop ;; \
+		*) echo "Unsupported architecture ${arch}"; exit 1 ;; \
+	esac
 
 RUN mkdir -p /init-config/init
 COPY init-config-atelierb/init/* /init-config/init
