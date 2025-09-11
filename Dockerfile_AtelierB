@@ -38,18 +38,12 @@ RUN \
 			qtquickcontrols2-5-dev \
 			qml-module-qtquick-dialogs \
 			qml-module-qtquick-extras \
-			qtdeclarative5-dev \
-			lib32gcc-s1 \
-			lib32stdc++6 \
-			libc6-i386 \
-			libqt5serialport5 \
-			libqt5xmlpatterns5
+			qtdeclarative5-dev
 
 # Install AtelierB package
 RUN \
-	dpkg -i ${ATELIERB_DEB}; \
-	sed -e 's@^Exec=.*$@Exec=/opt/'${ATELIERB_RELEASE}'/bin/AtelierB@' \
-	    -e '/^Categories=.*$/d' \
+	apt-get install --yes ./${ATELIERB_DEB}; \
+	sed -e '/^Categories=.*$/d' \
 		/opt/${ATELIERB_RELEASE}/bin/AtelierB.desktop \
 			> /usr/share/applications/AtelierB.desktop ; \
 		echo "Categories=Proof;Development;Science;Math" \
