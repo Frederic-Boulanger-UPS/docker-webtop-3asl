@@ -48,7 +48,7 @@ RUN \
 					 touch /usr/share/applications/AtelierB.desktop ;; \
 		amd64) echo "Installing ${ATELIERB_DEB}"; \
 						apt-get install --yes ./${ATELIERB_DEB}; \
-						sed -e 's@^Exec=.*$@Exec=/opt/'${ATELIERB_RELEASE}'/bin/startAB@' \
+						sed -e 's@^Exec=.*$@Exec=sudo env HOME=/config /opt/'${ATELIERB_RELEASE}'/bin/startAB@' \
 								-e '/^Categories=.*$/d' \
 							/opt/${ATELIERB_RELEASE}/bin/AtelierB.desktop \
 						> /usr/share/applications/AtelierB.desktop ; \
