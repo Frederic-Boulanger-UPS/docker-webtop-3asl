@@ -9,7 +9,7 @@ ENV HOME="/config"
 ENV TZ=Europe/Paris
 ARG DEBIAN_FRONTEND=noninteractive
 
-ARG ECLIPSE_RELEASE="2025-06"
+ARG ECLIPSE_RELEASE="2025-09"
 
 # Install Eclipse and the required features/plugins
 RUN \

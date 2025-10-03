@@ -1,4 +1,4 @@
-release="2024-12"
+release="2025-09"
 arch=$(uname -m)
 if [ "$arch" = "arm64" -o "$arch" = "aarch64" ]
 then

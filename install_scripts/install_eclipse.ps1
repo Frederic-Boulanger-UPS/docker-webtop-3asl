@@ -1,4 +1,4 @@
-$version="2024-12"
+$version="2025-09"
 $eclipse="eclipse-modeling-${version}-R-win32-x86_64.zip"
 $client=new-object System.Net.WebClient
 

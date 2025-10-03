@@ -1,5 +1,5 @@
-eclipseversion="2024-12"
-eclipsename="Eclipse-Modeling-${eclipseversion}"
+eclipseversion="2025-09"
+eclipsename="Eclipse_Modeling_${eclipseversion}"
 platform="macosx-cocoa"
 arch=$(uname -m)
 if [ "$arch" = "arm64" -o "$arch" = "aarch64" ]

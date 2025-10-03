@@ -59,12 +59,12 @@ docker run --rm --detach \
   --name ${IMAGE} \
   ${REPO}${IMAGE}:${TAG}
 
-	echo "Waiting for container to start..."
-	sleep 10
-	echo "... done!"
-	
-	if [ -z "$SUDO_UID" ]
+	if [ $? == 0 ]
 	then
+		echo "Waiting for container to start..."
+		sleep 10
+		echo "... done!"
+	
 		if [ `uname` == "Darwin" ]
 		then
 			# on MacOS, use open
@@ -76,12 +76,6 @@ docker run --rm --detach \
 			|| echo "Point your web browser at http://${URL}:${PORT}"
 		fi
 	else
-		if [ `uname` == "Darwin" ]
-		then
-			su ${USER_NAME} -c "open -a firefox http://${URL}:${PORT}"
-		else
-			su ${USER_NAME} -c "xdg-open http://${URL}:${PORT}" \
-			|| echo "Point your web browser at http://${URL}:${PORT}"
-		fi
+		echo "Error starting Docker container."
 	fi
 fi
