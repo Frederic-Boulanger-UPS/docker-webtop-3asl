@@ -133,6 +133,13 @@ cat - > /init-config/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-desktop.xml 
           <property name="last-image" type="string" value="/config/desktop-background.png"/>
         </property>
       </property>
+      <property name="monitorselkies-primary" type="empty">
+        <property name="workspace0" type="empty">
+          <property name="color-style" type="int" value="0"/>
+          <property name="image-style" type="int" value="5"/>
+          <property name="last-image" type="string" value="/config/desktop-background.png"/>
+        </property>
+      </property>
     </property>
   </property>
   <property name="last" type="empty">

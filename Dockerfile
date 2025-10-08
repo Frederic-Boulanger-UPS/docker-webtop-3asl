@@ -140,9 +140,9 @@ RUN mkdir -p /init-config/init
 COPY init-config/init/* /init-config/init/
 COPY init-config-eclipse/init/eclipse_setup.sh /init-config/init/
 # COPY init-config-eclipse-microc/init/* /init-config/init/
-COPY init-config-frama-c/init/global_setup.sh /init-config/init/
+COPY init-config-frama-c/init/framac_setup.sh /init-config/init/
 COPY init-config-isabelle/init/isabelle_setup.sh /init-config/init/
-COPY init-config-atelierb/init/global_setup.sh /init-config/init/
+COPY init-config-atelierb/init/atelierb_setup.sh /init-config/init/
 
 RUN \
 	cd /init-config/init ; \
