@@ -2,6 +2,9 @@
 # Ubuntu Xfce webtop
 # Connect to http://localhost:3000/
 
+DOCKER=docker
+# DOCKER=podman
+
 # REPO=gitlab-research.centralesupelec.fr:4567/boulange/mydocker-images/
 REPO=fredblgr/
 IMAGE=docker-webtop-3asl
@@ -40,11 +43,11 @@ else
 fi
 
 # Make sure we have the latest version of the image
-docker pull ${REPO}${IMAGE}:${TAG} # > /dev/null 2>&1
+${DOCKER} pull ${REPO}${IMAGE}:${TAG} # > /dev/null 2>&1
 
 if [ $debug -gt 0 ]
 then
-docker run --rm --tty --interactive \
+${DOCKER} run --rm --tty --interactive \
   --publish ${PORT}:${PORT} \
   --publish ${SPORT}:${SPORT} \
   --volume ${PWD}/config:/config:rw \
@@ -52,7 +55,7 @@ docker run --rm --tty --interactive \
   --entrypoint=bash \
   ${REPO}${IMAGE}:${TAG}
 else
-docker run --rm --detach \
+${DOCKER} run --rm --detach \
   --publish ${PORT}:${PORT} \
   --publish ${SPORT}:${SPORT} \
   --volume ${PWD}/config:/config:rw \
@@ -76,6 +79,6 @@ docker run --rm --detach \
 			|| echo "Point your web browser at http://${URL}:${PORT}"
 		fi
 	else
-		echo "Error starting Docker container."
+		echo "Error starting container."
 	fi
 fi
