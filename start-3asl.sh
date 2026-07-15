@@ -51,6 +51,7 @@ ${DOCKER} run --rm --tty --interactive \
   --publish ${PORT}:${PORT} \
   --publish ${SPORT}:${SPORT} \
   --volume ${PWD}/config:/config:rw \
+  --env PUID=${USER_ID} --env PGID=${GROUP_ID} \
   --name ${IMAGE} \
   --entrypoint=bash \
   ${REPO}${IMAGE}:${TAG}
@@ -62,21 +63,27 @@ ${DOCKER} run --rm --detach \
   --name ${IMAGE} \
   ${REPO}${IMAGE}:${TAG}
 
-	if [ $? == 0 ]
+	if [ $? -eq 0 ]
 	then
 		echo "Waiting for container to start..."
 		sleep 10
 		echo "... done!"
 	
-		if [ `uname` == "Darwin" ]
+		if [ "$(uname)" = "Darwin" ]
 		then
 			# on MacOS, use open
 			open -a firefox http://${URL}:${PORT}
 		else
 			# elsewhere, try xdg-open
 			# and just write what to do if it fails
-			xdg-open http://${URL}:${PORT} \
-			|| echo "Point your web browser at http://${URL}:${PORT}"
+			if [ -z "$SUDO_UID" ]
+			then
+				sudo ${USER_NAME} -c "xdg-open http://${URL}:${PORT}" \
+				|| echo "Point your web browser at http://${URL}:${PORT}"
+			else
+				xdg-open http://${URL}:${PORT} \
+				|| echo "Point your web browser at http://${URL}:${PORT}"
+			fi
 		fi
 	else
 		echo "Error starting container."

@@ -1,10 +1,12 @@
 .PHONY: build manifest run debug push save clean clobber buildaltergo buildprovers
+DOCKER=docker
+# DOCKER=podman
 
 # REPO    = gitlab-research.centralesupelec.fr:4567/boulange/mydocker-images/
 REPO    = fredblgr/
 NAME    = docker-webtop-3asl
-TAG     = 2025
-MAINTAG = 2025
+TAG     = 2026
+MAINTAG = 2026
 # Can be overriden with "make ARCH=amd64" for instance
 # ARCH   := $$(arch=$$(uname -m); if [ $$arch = "x86_64" ]; then echo amd64; elif [ $$arch = "aarch64" ]; then echo arm64; else echo $$arch; fi)
 ARCH   := $(shell if [ `uname -m` = "x86_64" ]; then echo "amd64"; elif [ `uname -m` = "aarch64" ]; then echo "arm64"; else echo `uname -m`; fi)
@@ -12,9 +14,9 @@ ARCHS   = amd64 arm64
 IMAGES := $(ARCHS:%=$(REPO)$(NAME):$(MAINTAG)-%)
 PLATFORMS := $$(first="True"; for a in $(ARCHS); do if [[ $$first == "True" ]]; then printf "linux/%s" $$a; first="False"; else printf ",linux/%s" $$a; fi; done)
 DOCKERFILE = Dockerfile
-DOCKERFILEBASE = Dockerfile_base
+# DOCKERFILEBASE = Dockerfile_base
 DOCKERFILEECLIPSE = Dockerfile_Eclipse
-DOCKERFILEMICROC = Dockerfile_MicroC
+# DOCKERFILEMICROC = Dockerfile_MicroC
 DOCKERFILEISABELLE = Dockerfile_Isabelle
 # DOCKERFILESOUFFLE = Dockerfile_Souffle
 DOCKERFILEFRAMAC = Dockerfile_Frama-C
@@ -22,7 +24,7 @@ DOCKERFILEATELIERB = Dockerfile_AtelierB
 ARCHIMAGE := $(REPO)$(NAME):$(MAINTAG)-$(ARCH)
 ARCHIMAGEBASE := $(REPO)docker-webtop-base:$(TAG)-$(ARCH)
 ARCHIMAGEECLIPSE := $(REPO)docker-webtop-eclipse:$(TAG)-$(ARCH)
-ARCHIMAGEMICROC := $(REPO)docker-webtop-microc:$(TAG)-$(ARCH)
+# ARCHIMAGEMICROC := $(REPO)docker-webtop-microc:$(TAG)-$(ARCH)
 ARCHIMAGEISABELLE := $(REPO)docker-webtop-isabelle:$(TAG)-$(ARCH)
 # ARCHIMAGESOUFFLE := $(REPO)docker-webtop-souffle:$(TAG)-$(ARCH)
 ARCHIMAGEFRAMAC := $(REPO)docker-webtop-framac:$(TAG)-$(ARCH)
@@ -38,27 +40,27 @@ help:
 # Build image
 build:
 	@echo "Building $(ARCHIMAGE) for $(ARCH) from $(DOCKERFILE)"
-	@if [ `docker images $(ARCHIMAGEBASE) | wc -l` -lt 2 ] ; then \
+	@if [ `$(DOCKER) images $(ARCHIMAGEBASE) | wc -l` -lt 2 ] ; then \
 		echo "*****************************************" ; \
-		echo "* You should 'make build_base' first *" ; \
+		echo "* You should build the $(ARCHIMAGEBASE) first *" ; \
 		echo "*****************************************" ; \
 	fi
-	@if [ `docker images $(ARCHIMAGEECLIPSE) | wc -l` -lt 2 ] ; then \
+	@if [ `$(DOCKER) images $(ARCHIMAGEECLIPSE) | wc -l` -lt 2 ] ; then \
 		echo "*****************************************" ; \
 		echo "* You should 'make build_eclipse' first *" ; \
 		echo "*****************************************" ; \
 	fi
-	@if [ `docker images $(ARCHIMAGEISABELLE) | wc -l` -lt 2 ] ; then \
+	@if [ `$(DOCKER) images $(ARCHIMAGEISABELLE) | wc -l` -lt 2 ] ; then \
 		echo "******************************************" ; \
 		echo "* You should 'make build_isabelle' first *" ; \
 		echo "******************************************" ; \
 	fi
-	@if [ `docker images $(ARCHIMAGEFRAMAC) | wc -l` -lt 2 ] ; then \
+	@if [ `$(DOCKER) images $(ARCHIMAGEFRAMAC) | wc -l` -lt 2 ] ; then \
 		echo "******************************************" ; \
 		echo "* You should 'make build_framac' first *" ; \
 		echo "******************************************" ; \
 	fi
-	docker build --platform linux/$(ARCH) \
+	$(DOCKER) build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
 							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
 							 --build-arg ECLIPSEIMAGE=$(ARCHIMAGEECLIPSE) \
@@ -67,107 +69,107 @@ build:
 							 --build-arg FRAMACIMAGE=$(ARCHIMAGEFRAMAC) \
 							 --build-arg ATELIERBIMAGE=$(ARCHIMAGEATELIERB) \
 							 --tag $(ARCHIMAGE) --file $(DOCKERFILE) .
-	@danglingimages=$$(docker images --filter "dangling=true" -q); \
+	@danglingimages=$$($(DOCKER) images --filter "dangling=true" -q); \
 	if [ "$$danglingimages" != "" ]; then \
-	  docker rmi $$(docker images --filter "dangling=true" -q); \
+	  $(DOCKER) rmi $$($(DOCKER) images --filter "dangling=true" -q); \
 	fi
 
-# Build base image to experiment with installing new stuff
-build_base:
-	@echo "Building $(ARCHIMAGEBASE) for $(ARCH) from $(DOCKERFILEBASE)"
-	docker build --platform linux/$(ARCH) \
-							 --build-arg arch=$(ARCH) \
-							 --tag $(ARCHIMAGEBASE) \
-							 --file $(DOCKERFILEBASE) .
-	@danglingimages=$$(docker images --filter "dangling=true" -q); \
-	if [ "$$danglingimages" != "" ]; then \
-	  docker rmi $$(docker images --filter "dangling=true" -q); \
-	fi
+# # Build base image to experiment with installing new stuff
+# build_base:
+# 	@echo "Building $(ARCHIMAGEBASE) for $(ARCH) from $(DOCKERFILEBASE)"
+# 	$(DOCKER) build --platform linux/$(ARCH) \
+# 							 --build-arg arch=$(ARCH) \
+# 							 --tag $(ARCHIMAGEBASE) \
+# 							 --file $(DOCKERFILEBASE) .
+# 	@danglingimages=$$($(DOCKER) images --filter "dangling=true" -q); \
+# 	if [ "$$danglingimages" != "" ]; then \
+# 	  $(DOCKER) rmi $$($(DOCKER) images --filter "dangling=true" -q); \
+# 	fi
 
 # Build Eclipse MicroC feature image
 build_microc:
 	@echo "Building $(ARCHIMAGEMICROC) for $(ARCH) from $(DOCKERFILEMICROC)"
-	docker build --platform linux/$(ARCH) \
+	$(DOCKER) build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
 							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
 							 --tag $(ARCHIMAGEMICROC) \
 							 --file $(DOCKERFILEMICROC) .
-	@danglingimages=$$(docker images --filter "dangling=true" -q); \
+	@danglingimages=$$($(DOCKER) images --filter "dangling=true" -q); \
 	if [ "$$danglingimages" != "" ]; then \
-	  docker rmi $$(docker images --filter "dangling=true" -q); \
+	  $(DOCKER) rmi $$($(DOCKER) images --filter "dangling=true" -q); \
 	fi
 
 # Build Eclipse image
 build_eclipse:
 	@echo "Building $(ARCHIMAGEECLIPSE) for $(ARCH) from $(DOCKERFILEECLIPSE)"
-	docker build --platform linux/$(ARCH) \
+	$(DOCKER) build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
 							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
 							 --tag $(ARCHIMAGEECLIPSE) \
 							 --file $(DOCKERFILEECLIPSE) .
-	@danglingimages=$$(docker images --filter "dangling=true" -q); \
+	@danglingimages=$$($(DOCKER) images --filter "dangling=true" -q); \
 	if [ "$$danglingimages" != "" ]; then \
-	  docker rmi $$(docker images --filter "dangling=true" -q); \
+	  $(DOCKER) rmi $$($(DOCKER) images --filter "dangling=true" -q); \
 	fi
 
 # Build Isabelle image
 build_isabelle:
 	@echo "Building $(ARCHIMAGEISABELLE) for $(ARCH) from $(DOCKERFILEISABELLE)"
-	docker build --platform linux/$(ARCH) \
+	$(DOCKER) build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
 							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
 							 --tag $(ARCHIMAGEISABELLE) \
 							 --file $(DOCKERFILEISABELLE) .
-	@danglingimages=$$(docker images --filter "dangling=true" -q); \
+	@danglingimages=$$($(DOCKER) images --filter "dangling=true" -q); \
 	if [ "$$danglingimages" != "" ]; then \
-	  docker rmi $$(docker images --filter "dangling=true" -q); \
+	  $(DOCKER) rmi $$($(DOCKER) images --filter "dangling=true" -q); \
 	fi
 
 # # Build Souffle image
 # build_souffle:
 # 	@echo "Building $(ARCHIMAGESOUFFLE) for $(ARCH) from $(DOCKERFILESOUFFLE)"
-# 	docker build --platform linux/$(ARCH) \
+# 	$(DOCKER) build --platform linux/$(ARCH) \
 # 							 --build-arg arch=$(ARCH) \
 # 							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
 # 							 --tag $(ARCHIMAGESOUFFLE) \
 # 							 --file $(DOCKERFILESOUFFLE) .
-# 	@danglingimages=$$(docker images --filter "dangling=true" -q); \
+# 	@danglingimages=$$($(DOCKER) images --filter "dangling=true" -q); \
 # 	if [ "$$danglingimages" != "" ]; then \
-# 	  docker rmi $$(docker images --filter "dangling=true" -q); \
+# 	  $(DOCKER) rmi $$($(DOCKER) images --filter "dangling=true" -q); \
 # 	fi
 
 # Build Frama-C image
 build_framac:
 	@echo "Building $(ARCHIMAGEFRAMAC) for $(ARCH) from $(DOCKERFILEFRAMAC)"
-	docker build --platform linux/$(ARCH) \
+	$(DOCKER) build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
 							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
 							 --build-arg ISABELLEIMAGE=$(ARCHIMAGEISABELLE) \
 							 --tag $(ARCHIMAGEFRAMAC) \
 							 --file $(DOCKERFILEFRAMAC) .
-	@danglingimages=$$(docker images --filter "dangling=true" -q); \
+	@danglingimages=$$($(DOCKER) images --filter "dangling=true" -q); \
 	if [ "$$danglingimages" != "" ]; then \
-	  docker rmi $$(docker images --filter "dangling=true" -q); \
+	  $(DOCKER) rmi $$($(DOCKER) images --filter "dangling=true" -q); \
 	fi
 
 # Build AtelierB image
 build_atelierb:
 	@echo "Building $(ARCHIMAGEATELIERB) for $(ARCH) from $(DOCKERFILEATELIERB)"
-	docker build --platform linux/$(ARCH) \
+	$(DOCKER) build --platform linux/$(ARCH) \
 							 --build-arg arch=$(ARCH) \
 							 --build-arg BASEIMAGE=$(ARCHIMAGEBASE) \
 							 --tag $(ARCHIMAGEATELIERB) \
 							 --file $(DOCKERFILEATELIERB) .
-	@danglingimages=$$(docker images --filter "dangling=true" -q); \
+	@danglingimages=$$($(DOCKER) images --filter "dangling=true" -q); \
 	if [ "$$danglingimages" != "" ]; then \
-	  docker rmi $$(docker images --filter "dangling=true" -q); \
+	  $(DOCKER) rmi $$($(DOCKER) images --filter "dangling=true" -q); \
 	fi
 
 # login:
-# 	docker login gitlab-research.centralesupelec.fr:4567
+# 	$(DOCKER) login gitlab-research.centralesupelec.fr:4567
 
 login:
-	docker login --username fredblgr https://index.docker.io
+	$(DOCKER) login --username fredblgr https://index.docker.io
 
 # Safe way to build multiarchitecture images:
 # - build each image on the matching hardware, with the -$(ARCH) tag
@@ -175,38 +177,38 @@ login:
 # - build a manifest list referencing those images
 # - push the manifest list so that the multiarchitecture image exist
 manifest:
-	docker manifest create $(REPO)$(NAME):$(MAINTAG) $(IMAGES)
+	$(DOCKER) manifest create $(REPO)$(NAME):$(MAINTAG) $(IMAGES)
 	@for arch in $(ARCHS); \
 	 do \
-	   echo docker manifest annotate --os linux --arch $$arch $(REPO)$(NAME):$(MAINTAG) $(REPO)$(NAME):$(MAINTAG)-$$arch; \
-	   docker manifest annotate --os linux --arch $$arch $(REPO)$(NAME):$(MAINTAG) $(REPO)$(NAME):$(MAINTAG)-$$arch; \
+	   echo $(DOCKER) manifest annotate --os linux --arch $$arch $(REPO)$(NAME):$(MAINTAG) $(REPO)$(NAME):$(MAINTAG)-$$arch; \
+	   $(DOCKER) manifest annotate --os linux --arch $$arch $(REPO)$(NAME):$(MAINTAG) $(REPO)$(NAME):$(MAINTAG)-$$arch; \
 	 done
-	docker manifest push $(REPO)$(NAME):$(MAINTAG)
+	$(DOCKER) manifest push $(REPO)$(NAME):$(MAINTAG)
 
 rmmanifest:
-	docker manifest rm $(REPO)$(NAME):$(MAINTAG)
+	$(DOCKER) manifest rm $(REPO)$(NAME):$(MAINTAG)
 
 
 push:
-	docker push $(ARCHIMAGE)
+	$(DOCKER) push $(ARCHIMAGE)
 
 save:
-	docker save $(ARCHIMAGE) | gzip > $(NAME)-$(MAINTAG)-$(ARCH).tar.gz
+	$(DOCKER) save $(ARCHIMAGE) | gzip > $(NAME)-$(MAINTAG)-$(ARCH).tar.gz
 
 # Clear caches
 clean:
-	docker builder prune
+	$(DOCKER) builder prune
 
 clobber:
-	docker rmi $(REPO)$(NAME):$(MAINTAG) $(ARCHIMAGE)
-	docker rmi $(ARCHIMAGEECLIPSE)
-	docker rmi $(ARCHIMAGEISABELLE)
-# 	docker rmi $(DOCKERFILESOUFFLE)
-	docker rmi $(ARCHIMAGEFRAMAC)
-	docker builder prune --all
+	$(DOCKER) rmi $(REPO)$(NAME):$(MAINTAG) $(ARCHIMAGE)
+	$(DOCKER) rmi $(ARCHIMAGEECLIPSE)
+	$(DOCKER) rmi $(ARCHIMAGEISABELLE)
+# 	$(DOCKER) rmi $(DOCKERFILESOUFFLE)
+	$(DOCKER) rmi $(ARCHIMAGEFRAMAC)
+	$(DOCKER) builder prune --all
 
 run:
-	docker run --rm --detach \
+	$(DOCKER) run --rm --detach \
 	  --platform linux/$(ARCH) \
 		--env="PUID=`id -u`" --env="PGID=`id -g`" \
 		--volume ${PWD}/config:/config:rw \
@@ -219,7 +221,7 @@ run:
 
 #	  --cap-add SYS_ADMIN
 run_base:
-	docker run --rm --detach \
+	$(DOCKER) run --rm --detach \
 	  --platform linux/$(ARCH) \
 		--env="PUID=`id -u`" --env="PGID=`id -g`" \
 		--volume ${PWD}/config:/config:rw \
@@ -231,7 +233,7 @@ run_base:
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 run_microc:
-	docker run --rm --detach \
+	$(DOCKER) run --rm --detach \
 	  --platform linux/$(ARCH) \
 		--env="PUID=`id -u`" --env="PGID=`id -g`" \
 		--volume ${PWD}/config:/config:rw \
@@ -243,7 +245,7 @@ run_microc:
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 run_eclipse:
-	docker run --rm --detach \
+	$(DOCKER) run --rm --detach \
 	  --platform linux/$(ARCH) \
 		--env="PUID=`id -u`" --env="PGID=`id -g`" \
 		--volume ${PWD}/config:/config:rw \
@@ -255,7 +257,7 @@ run_eclipse:
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 run_isabelle:
-	docker run \
+	$(DOCKER) run \
 	  --rm --detach \
 	  --platform linux/$(ARCH) \
 		--env="PUID=`id -u`" --env="PGID=`id -g`" \
@@ -268,7 +270,7 @@ run_isabelle:
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 # run_souffle:
-# 	docker run --rm --detach \
+# 	$(DOCKER) run --rm --detach \
 # 	  --platform linux/$(ARCH) \
 # 		--env="PUID=`id -u`" --env="PGID=`id -g`" \
 # 		--volume ${PWD}/config:/config:rw \
@@ -280,7 +282,7 @@ run_isabelle:
 # 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 run_framac:
-	docker run --rm --detach \
+	$(DOCKER) run --rm --detach \
 	  --platform linux/$(ARCH) \
 		--env="PUID=`id -u`" --env="PGID=`id -g`" \
 		--volume ${PWD}/config:/config:rw \
@@ -292,7 +294,7 @@ run_framac:
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 run_atelierb:
-	docker run --rm --detach \
+	$(DOCKER) run --rm --detach \
 	  --platform linux/$(ARCH) \
 		--volume ${PWD}/config:/config:rw \
 		--publish 3000:3000 \
@@ -303,7 +305,7 @@ run_atelierb:
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 runpriv:
-	docker run --rm --interactive --tty --privileged \
+	$(DOCKER) run --rm --interactive --tty --privileged \
 	  --platform linux/$(ARCH) \
 		--env="PUID=`id -u`" --env="PGID=`id -g`" \
 		--volume ${PWD}/config:/config:rw \
@@ -315,7 +317,7 @@ runpriv:
 	open http://localhost:3000 || xdg-open http://localhost:3000 || echo "http://localhost:3000"
 
 debug:
-	docker run --rm --tty --interactive \
+	$(DOCKER) run --rm --tty --interactive \
 	  --platform linux/$(ARCH) \
 		--volume ${PWD}/config:/config:rw \
 		--env="PUID=`id -u`" --env="PGID=`id -g`" \

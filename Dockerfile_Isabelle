@@ -24,7 +24,7 @@ RUN \
 
 # Install latest Isabelle
 RUN \
-	isabelle="Isabelle2025" ; \
+	isabelle="Isabelle2025-2" ; \
 	case ${arch} in \
 		arm64) isabelletgz=${isabelle}_linux_arm.tar.gz ;; \
 		amd64) isabelletgz=${isabelle}_linux.tar.gz ;; \
