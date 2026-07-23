@@ -132,17 +132,17 @@ COPY --from=isabelleimage /usr/local/lib/libpoly* /usr/local/lib/
 COPY --from=framacimage /opt/opam /opt/opam
 
 # Copy Atelier B
-COPY --from=atelierbimage /opt/${ATELIERB_RELEASE} /opt/${ATELIERB_RELEASE}
-COPY --from=atelierbimage /usr/share/applications/AtelierB.desktop /usr/share/applications/AtelierB.desktop
+# COPY --from=atelierbimage /opt/${ATELIERB_RELEASE} /opt/${ATELIERB_RELEASE}
+# COPY --from=atelierbimage /usr/share/applications/AtelierB.desktop /usr/share/applications/AtelierB.desktop
 
 RUN mkdir -p /init-config/init
 
+COPY init-config/fs/* /init-config/
 COPY init-config/init/* /init-config/init/
 COPY init-config-eclipse/init/eclipse_setup.sh /init-config/init/
 # COPY init-config-eclipse-microc/init/* /init-config/init/
-COPY init-config-frama-c/init/framac_setup.sh /init-config/init/
 COPY init-config-isabelle/init/isabelle_setup.sh /init-config/init/
-COPY init-config-atelierb/init/atelierb_setup.sh /init-config/init/
+# COPY init-config-atelierb/init/atelierb_setup.sh /init-config/init/
 
 RUN \
 	cd /init-config/init ; \

@@ -30,10 +30,10 @@ RUN \
 
 RUN \
 	mkdir /opt/opam ; \
-	opam init --root=/opt/opam --yes ; \
+	opam init --disable-sandboxing --root=/opt/opam --yes ; \
 	eval $(opam env --root=/opt/opam) ; \
 	export OPAMROOT=/opt/opam ; \
-	opam install -y frama-c.31.0 frama-c-metacsl.0.9~beta
+	opam install -y alt-ergo.2.6.3 frama-c.32.1 frama-c-metacsl.0.10
  
 RUN mkdir -p /init-config/init
 

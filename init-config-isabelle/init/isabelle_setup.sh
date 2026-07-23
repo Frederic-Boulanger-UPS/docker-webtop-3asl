@@ -23,7 +23,7 @@ timelimit = 5.000000
 [partial_prover]
 name = "Alt-Ergo"
 path = "/opt/opam/default/bin/alt-ergo"
-version = "2.6.0"
+version = "2.6.3"
 
 [partial_prover]
 name = "CVC4"
@@ -33,12 +33,12 @@ version = "1.8"
 [partial_prover]
 name = "CVC5"
 path = "/usr/local/bin/cvc5"
-version = "1.3.0"
+version = "1.2.1"
 
 [partial_prover]
 name = "Coq"
 path = "/usr/bin/coqtop"
-version = "8.18.0"
+version = "8.20.1"
 
 [partial_prover]
 name = "Isabelle"
@@ -48,5 +48,31 @@ version = "2022"
 [partial_prover]
 name = "Z3"
 path = "/usr/bin/z3"
-version = "4.8.12"
+version = "4.13.3"
+==END==
+
+mkdir -p /init-config/.isabelle/Isabelle2025-2/etc
+cat - > /init-config/.isabelle/Isabelle2025-2/etc/preferences << "==END=="
+editor_output_state = "true"
+jedit_completion_delay = "0.0"
+==END==
+
+mkdir -p /init-config/.isabelle/Isabelle2022/etc
+cat - > /init-config/.isabelle/Isabelle2022/etc/preferences << "==END=="
+editor_output_state = "true"
+jedit_completion_delay = "0.0"
+==END==
+
+mkdir -p /init-config/.isabelle/Isabelle2025-2/jedit
+cat - > /init-config/.isabelle/Isabelle2025-2/jedit/properties << "==END=="
+isabelle-documentation.dock-position=right
+vfs.browser.dock-position=right
+view.fontsize=12
+==END==
+
+mkdir -p /init-config/.isabelle/Isabelle2022/jedit
+cat - > /init-config/.isabelle/Isabelle2022/jedit/properties << "==END=="
+isabelle-documentation.dock-position=right
+vfs.browser.dock-position=right
+view.fontsize=12
 ==END==

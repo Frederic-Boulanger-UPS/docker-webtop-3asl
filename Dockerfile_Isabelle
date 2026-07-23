@@ -23,14 +23,16 @@ RUN \
 	ln -s /usr/local/Isabelle/bin/isabelle /usr/local/bin/isabelle
 
 # Install latest Isabelle
+# isabellemirror="https://isabelle.in.tum.de/dist/" ; \
 RUN \
 	isabelle="Isabelle2025-2" ; \
+	isabellemirror="https://www.cl.cam.ac.uk/research/hvg/Isabelle/dist/" ; \
 	case ${arch} in \
 		arm64) isabelletgz=${isabelle}_linux_arm.tar.gz ;; \
 		amd64) isabelletgz=${isabelle}_linux.tar.gz ;; \
 		*) echo "Unsupported architecture ${arch}" ;; \
 	esac ; \
-	curl --remote-name "https://isabelle.in.tum.de/dist/${isabelletgz}" ; \
+	curl --remote-name "${isabellemirror}${isabelletgz}" ; \
 	tar zxf ${isabelletgz} && rm ${isabelletgz} ; \
 	mv ${isabelle} /usr/local/IsabelleLatest ; \
 	ln -s /usr/local/IsabelleLatest/bin/isabelle /usr/local/bin/isabelle-latest
@@ -55,7 +57,7 @@ RUN \
 
 # 	cvc5="cvc5-1.0.9" ; \
 RUN \
-	cvc5="cvc5-1.3.0" ; \
+	cvc5="cvc5-1.3.4" ; \
 	curl --remote-name "https://codeload.github.com/cvc5/cvc5/tar.gz/refs/tags/${cvc5}" ; \
 	mv ${cvc5} ${cvc5}.tar.gz ; \
 	tar zxf ${cvc5}.tar.gz && rm ${cvc5}.tar.gz ; \
@@ -72,10 +74,10 @@ RUN \
 	opam init --disable-sandboxing --root=/opt/opam --yes ; \
 	eval $(opam env --root=/opt/opam) ; \
 	export OPAMROOT=/opt/opam ; \
-	opam install -y alt-ergo.2.6.0
+	opam install -y alt-ergo.2.6.3
 
 RUN \
-	why="why3-1.8.1" ; \
+	why="why3-1.8.2" ; \
 	whyisabelle="Isabelle2022" ; \
 	curl -O https://why3.gitlabpages.inria.fr/releases/${why}.tar.gz ; \
 	tar zxf ${why}.tar.gz && rm ${why}.tar.gz ; \

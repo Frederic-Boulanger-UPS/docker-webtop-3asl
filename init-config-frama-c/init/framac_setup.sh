@@ -18,5 +18,5 @@ timelimit = 5.000000
 [partial_prover]
 name = "Alt-Ergo"
 path = "/opt/opam/default/bin/alt-ergo"
-version = "2.6.2"
+version = "2.6.3"
 ==END==
