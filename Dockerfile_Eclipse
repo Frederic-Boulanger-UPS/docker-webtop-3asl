@@ -12,7 +12,6 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG ECLIPSE_RELEASE="2026-06"
 
 # Install Eclipse and the required features/plugins
-#		"org.eclipse.acceleo.feature.group"
 RUN \
 	case ${arch} in \
 		arm64) eclipsetgz=eclipse-modeling-${ECLIPSE_RELEASE}-R-linux-gtk-aarch64.tar.gz ;; \
@@ -23,7 +22,6 @@ RUN \
 	tar zxf ${eclipsetgz} && rm ${eclipsetgz} ; \
 	mv eclipse /usr/local/eclipse ; \
 	for feature in \
-		"org.eclipse.acceleo.aql.feature.feature.group" \
 		"org.eclipse.ocl.examples.feature.group" \
 		"org.eclipse.m2m.qvt.oml.tools.coverage.feature.group" \
 		"org.eclipse.m2m.qvt.oml.tools.coverage.source.feature.group" \
@@ -43,6 +41,12 @@ RUN \
 			-repository https://download.eclipse.org/releases/${ECLIPSE_RELEASE}/ \
 			-installIU "${feature}" ; \
 	done
+	
+# Install Acceleo
+RUN /usr/local/eclipse/eclipse -nosplash \
+			-application org.eclipse.equinox.p2.director \
+			-repository https://download.eclipse.org/acceleo/updates/releases/3.7 \
+			-installIU "org.eclipse.acceleo.feature.group"
 
 # Install MiniARM assembler plugin
 RUN /usr/local/eclipse/eclipse -nosplash \
