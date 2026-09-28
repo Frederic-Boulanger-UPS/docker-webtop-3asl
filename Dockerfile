@@ -90,6 +90,20 @@ RUN \
 	apt-get install -y logisim \
 	&& rm /usr/bin/logisim
 
+# Install the tools distrobox checks for that are not already there,
+# so that a distrobox works even if it cannot install them when it first starts
+RUN \
+	apt-get install -y \
+		bc \
+		iputils-ping \
+		less \
+		lsof \
+		pigz \
+		rsync \
+		time \
+		tree \
+		wget
+
 RUN \
 	apt-get autoremove ; \
 	apt-get autoclean ; \
@@ -130,6 +144,16 @@ COPY --from=isabelleimage /usr/local/lib/libpoly* /usr/local/lib/
 
 # Copy Frama-C installation from Frama-C image
 COPY --from=framacimage /opt/opam /opt/opam
+ENV OPAMROOT=/opt/opam
+# Make the Frama-C tools available without the opam switch in the PATH
+# (commands exported from a distrobox are not run by a login shell)
+RUN \
+	for tool in frama-c frama-c-gui frama-c-script ivette e-acsl-gcc.sh alt-ergo ; \
+	do \
+		if [ -e /opt/opam/default/bin/$tool ] ; then \
+			ln -s /opt/opam/default/bin/$tool /usr/local/bin/$tool ; \
+		fi ; \
+	done
 
 # Copy Atelier B
 # COPY --from=atelierbimage /opt/${ATELIERB_RELEASE} /opt/${ATELIERB_RELEASE}
@@ -152,6 +176,11 @@ RUN \
 		./$script ; \
 	done ; \
 	cd .. ; rm -r init
+
+# Entry point, which also lets distrobox check the image
+COPY mydocker_startup/wrapper_script.sh /usr/local/lib/wrapper_script.sh
+# Setup of the user's shell and home when used through distrobox
+COPY distrobox/3asl.sh /etc/profile.d/3asl.sh
 
 # Clean up
 RUN apt-get autoremove && apt-get autoclean && apt-get clean ; \

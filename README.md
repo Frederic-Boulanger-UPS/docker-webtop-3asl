@@ -30,3 +30,30 @@ and on [GitHub](https://github.com/Frederic-Boulanger-UPS/docker-webtop-3asl)
 You may also use the scripts [start-3asl.sh](https://github.com/Frederic-Boulanger-UPS/docker-webtop-3asl/blob/main/start-3asl.sh) or [start-3asl.ps1](https://github.com/Frederic-Boulanger-UPS/docker-webtop-3asl/blob/main/start-3asl.ps1).
 
 The start-3asl.ps1 script can be used after allowing the execution of scripts with the command ```Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser```.
+
+## Using with distrobox (Linux)
+
+On Linux, the tools can also run as ordinary windows on your own desktop, in your own
+home directory, with [distrobox](https://distrobox.it) (with podman or docker):
+
+```
+distrobox create --name 3asl --image docker.io/fredblgr/docker-webtop-3asl:2026
+distrobox enter 3asl
+```
+
+The first `distrobox enter` takes a minute to set the container up. In the container,
+`eclipse`, `isabelle`, `isabelle-latest`, `why3`, `coqide`, `frama-c`, `frama-c-gui`,
+`logisim`, `alt-ergo`, `z3`, `cvc4` and `cvc5` are available. On the first login, the
+course configuration is copied to `~/.why3.conf` and `~/.isabelle`, unless you already
+have them.
+
+To get Eclipse and Isabelle in your desktop's application menu, run in the container:
+
+```
+distrobox-export --app Eclipse
+distrobox-export --app Isabelle
+```
+
+With a window manager that does not reparent windows (sway, niri, ...), Java applications
+(Logisim, Isabelle) may show empty windows: add
+`--additional-flags "--env _JAVA_AWT_WM_NONREPARENTING=1"` to `distrobox create`.

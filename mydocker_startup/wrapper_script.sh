@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# A command given as an absolute path is run instead of the webtop.
+# distrobox needs this: `distrobox create` checks the image by running
+# `<image> /bin/true`, which would never return if the webtop started.
+case "$1" in
+    /*) exec "$@" ;;
+esac
+
 cp    -TRn /init-config/ /config
 chown -R   abc:abc       /config
 
