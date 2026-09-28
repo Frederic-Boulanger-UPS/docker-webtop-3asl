@@ -44,6 +44,17 @@ There is a [`start-3asl.ps1`](https://github.com/Frederic-Boulanger-UPS/docker-w
 
 You browser should display an Ubuntu desktop. Else, check the console for errors and point your web browser at [http://localhost:3000](http://localhost3000)
 
+Using with distrobox (Linux)
+----------------------------
+The tools can also run as ordinary windows on your Linux desktop with [distrobox](https://distrobox.it):
+
+```
+distrobox create --name 3asl --image docker.io/fredblgr/docker-webtop-3asl:2026
+distrobox enter 3asl
+```
+
+See the [README on GitHub](https://github.com/Frederic-Boulanger-UPS/docker-webtop-3asl#using-with-distrobox-linux) for details.
+
 
 License
 ==================
