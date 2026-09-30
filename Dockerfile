@@ -30,9 +30,9 @@ ENV HOME="/config"
 ENV TZ=Europe/Paris
 ARG DEBIAN_FRONTEND=noninteractive
 
-ARG ATELIERB_YEAR="2024/09"
-ARG ATELIERB_RELEASE="atelierb-cssp-24.04"
-ARG ATELIERB_PLATFORM="ubuntu-24.04"
+# ARG ATELIERB_YEAR="2024/09"
+# ARG ATELIERB_RELEASE="atelierb-cssp-24.04"
+# ARG ATELIERB_PLATFORM="ubuntu-24.04"
 
 RUN \
 	apt-get update ; \
