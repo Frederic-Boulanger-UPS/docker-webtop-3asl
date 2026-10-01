@@ -19,7 +19,7 @@ RUN \
 		*) echo "Unsupported architecture ${arch}" ;; \
 	esac ; \
 	curl --remote-name "https://mirror.ibcp.fr/pub/eclipse/technology/epp/downloads/release/${ECLIPSE_RELEASE}/R/${eclipsetgz}" ; \
-	tar zxf ${eclipsetgz} && rm ${eclipsetgz} ; \
+	tar --no-same-owner -zxf ${eclipsetgz} && rm ${eclipsetgz} ; \
 	mv eclipse /usr/local/eclipse ; \
 	for feature in \
 		"org.eclipse.ocl.examples.feature.group" \
@@ -41,7 +41,7 @@ RUN \
 			-repository https://download.eclipse.org/releases/${ECLIPSE_RELEASE}/ \
 			-installIU "${feature}" ; \
 	done
-	
+
 # Install Acceleo
 RUN /usr/local/eclipse/eclipse -nosplash \
 			-application org.eclipse.equinox.p2.director \
