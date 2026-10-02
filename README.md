@@ -57,3 +57,16 @@ distrobox-export --app Isabelle
 With a window manager that does not reparent windows (sway, niri, ...), Java applications
 (Logisim, Isabelle) may show empty windows: add
 `--additional-flags "--env _JAVA_AWT_WM_NONREPARENTING=1"` to `distrobox create`.
+
+On a HiDPI screen, if the applications look too small to read, also add
+`--env GDK_SCALE=2 --env GDK_DPI_SCALE=0.875` to `--additional-flags`. With both
+adjustments, the creation command becomes:
+
+```
+distrobox create --name 3asl --image docker.io/fredblgr/docker-webtop-3asl:2026 --additional-flags "--env _JAVA_AWT_WM_NONREPARENTING=1 --env GDK_SCALE=2 --env GDK_DPI_SCALE=0.875"
+```
+
+These flags are recorded when the container is created: to change them, remove the
+container with `distrobox rm -f 3asl` and run `distrobox create` again. Your home
+directory and the course configuration (`~/.why3.conf`, `~/.isabelle`) are on the host
+side and are kept.
